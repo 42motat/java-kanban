@@ -5,29 +5,51 @@ import java.util.ArrayList;
 public class Epic extends Task {
     private ArrayList<Subtask> subtasks;
 
-    public Epic(String taskTitle, String taskDesc, TaskStatus taskStatus) {
-        super(taskTitle, taskDesc, TaskStatus.DONE);
+    // для создания epic
+    public Epic(String taskTitle, String taskDesc) {
+        super(taskTitle, taskDesc);
         this.subtasks = new ArrayList<>();
     }
 
+    // для обновления epic
     public Epic(Integer taskId, String taskTitle, String taskDesc) {
         super(taskId, taskTitle, taskDesc);
-        this.subtasks = getSubtasks();
     }
 
     public void addSubtask(Subtask subtask) {
         subtasks.add(subtask);
     }
 
-    @Override
-    public void setTaskStatus(TaskStatus taskStatus) {
-        if (subtasks.isEmpty()) {
-            taskStatus = TaskStatus.NEW;
+    public void calculateEpicStatus(Epic epic) {
+        subtasks = getSubtasks(epic);
+        if (subtasks != null) {
+            int doneSubtasks = 0;
+            int newSubtasks = 0;
+            for (Subtask sub : subtasks)
+                if (sub.getTaskStatus().equals(TaskStatus.DONE)) {
+                    doneSubtasks++;
+                } else if (sub.getTaskStatus().equals(TaskStatus.NEW)) {
+                    newSubtasks++;
+                }
+            if (doneSubtasks < subtasks.size() && newSubtasks < subtasks.size()) {
+                setTaskStatus(TaskStatus.IN_PROGRESS);
+            } else if (doneSubtasks == subtasks.size()) {
+                setTaskStatus(TaskStatus.DONE);
+            } else if (newSubtasks == subtasks.size()) {
+                setTaskStatus(TaskStatus.NEW);
+            }
+        } else {
+            setTaskStatus(TaskStatus.NEW);
         }
     }
 
-    public ArrayList<Subtask> getSubtasks() {
+    public ArrayList<Subtask> getSubtasks(Epic epic) {
         return subtasks;
+    }
+
+    public void replaceSubtask(Subtask subtask, Subtask subtaskToRemove) {
+        subtasks.remove(subtaskToRemove);
+        subtasks.add(subtask);
     }
 
     public Integer getEpicId() {

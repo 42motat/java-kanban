@@ -8,14 +8,20 @@ public class Task {
     private String taskDesc;
     private TaskStatus taskStatus;
 
-    // для создания
+    // для создания task и subtask
     public Task(String taskTitle, String taskDesc, TaskStatus taskStatus) {
         this.taskTitle = taskTitle;
         this.taskDesc = taskDesc;
         this.taskStatus = taskStatus;
     }
 
-    // для обновления
+    // для создания epic
+    public Task(String taskTitle, String taskDesc) {
+        this.taskTitle = taskTitle;
+        this.taskDesc = taskDesc;
+    }
+
+    // для обновления task
     public Task(Integer taskId, String taskTitle, String taskDesc, TaskStatus taskStatus) {
         this.taskId = taskId;
         this.taskTitle = taskTitle;
@@ -23,7 +29,7 @@ public class Task {
         this.taskStatus = taskStatus;
     }
 
-    // для Эпика
+    // для обновления epic
     public Task(Integer taskId, String taskTitle, String taskDesc) {
         this.taskId = taskId;
         this.taskTitle = taskTitle;

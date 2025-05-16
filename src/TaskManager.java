@@ -6,19 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TaskManager {
-
-    /* методы, которые должны быть в этом классе для каждого из типа задач (задача, подзадача, эпик):
-     * 1. получение списка всех задач  --  +++
-     * 2. удаление всех задач  --  +++
-     * 3. получение задачи по id  --  +++
-     * 4. создание; сам объект должен передаваться в качестве параметра  --  +++
-     * 5. обновление; новая версия объекта с верным идентификатором передаётся в виде параметра
-     * 6. удаление по идентификатору  --  +++
-     *
-     * доп. методы:
-     * 1. получение списка всех подзадач определённого эпика  --  +++
-    */
-
     private HashMap<Integer, Task> tasks = new HashMap<>();
     private HashMap<Integer, Subtask> subtasks = new HashMap<>();
     private HashMap<Integer, Epic> epics = new HashMap<>();
@@ -67,18 +54,19 @@ public class TaskManager {
     public void createEpic(Epic epic) {
         epic.setTaskId(getNextEpicId());
         epics.put(epic.getTaskId(), epic);
+        epic.calculateEpicStatus(epic);
     }
 
-    public Epic getEpicById(int taskId) {
+    public Epic getEpicById(Integer taskId) {
         return epics.get(taskId);
     }
 
     public void updateEpic(Epic epic) {
-        // здесь нужно проверять статус?
+        epic.calculateEpicStatus(epic);
         epics.put(epic.getTaskId(), epic);
     }
 
-    public void deleteEpicById(int taskId) {
+    public void deleteEpicById(Integer taskId) {
         epics.remove(taskId);
     }
 
@@ -91,7 +79,7 @@ public class TaskManager {
     }
 
     public ArrayList<Subtask> getAllSubtasksOfEpic(int taskId) {
-        return epics.get(taskId).getSubtasks();
+        return epics.get(taskId).getSubtasks(getEpicById(taskId));
     }
 
     /* МЕТОДЫ Subtask */
@@ -99,13 +87,17 @@ public class TaskManager {
         subtask.setTaskId(getNextSubtaskId());
         subtasks.put(subtask.getTaskId(), subtask);
         epic.addSubtask(subtask);
+        epic.calculateEpicStatus(epic);
     }
 
-    public Subtask getSubtaskById(int taskId) {
-        return subtasks.get(taskId);
+    public void updateSubtask(Subtask subtask, Subtask subtaskToRemove, Epic epic) {
+        epic.replaceSubtask(subtask, subtaskToRemove);
+        subtasks.remove(subtaskToRemove.getTaskId());
+        subtasks.put(subtask.getTaskId(), subtask);
+        epic.calculateEpicStatus(epic);
     }
 
-    public void deleteSubtaskById(int taskId) {
+    public void deleteSubtaskById(Integer taskId) {
         subtasks.remove(taskId);
     }
 
@@ -115,6 +107,10 @@ public class TaskManager {
 
     public HashMap<Integer, Subtask> getAllSubtasks() {
         return subtasks;
+    }
+
+    public Subtask getSubtaskById(Integer taskId) {
+        return subtasks.get(taskId);
     }
 
     /* МЕГА ЧИСТКА */
