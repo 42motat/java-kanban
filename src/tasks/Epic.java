@@ -45,11 +45,22 @@ public class Epic extends Task {
 
     public ArrayList<Subtask> getSubtasks(Epic epic) {
         return subtasks;
+
     }
 
     public void replaceSubtask(Subtask subtask, Subtask subtaskToRemove) {
         subtasks.remove(subtaskToRemove);
         subtasks.add(subtask);
+    }
+
+    public void deleteSubtask(Integer subtaskId) {
+        subtasks.remove(subtaskId);
+    }
+
+    public void deleteAllSubtasks() {
+        if (subtasks != null) {
+            subtasks.clear();
+        }
     }
 
     public Integer getEpicId() {

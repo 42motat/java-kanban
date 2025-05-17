@@ -29,6 +29,12 @@ public class Main {
         Subtask subtask_2 = new Subtask("subtask_2", "subtask_2 desc", epic_with_subs.getEpicId());
         taskManager.createSubtask(epic_with_subs, subtask_2);
 
+        // * для проверки удаления подзадач Эпика при удалении самого Эпика
+        Subtask subtask_3 = new Subtask("subtask_3", "subtask_3 desc", epic_with_no_subs.getEpicId());
+        taskManager.createSubtask(epic_with_no_subs, subtask_3);
+        Subtask subtask_4 = new Subtask("subtask_4", "subtask_4 desc", epic_with_no_subs.getEpicId());
+        taskManager.createSubtask(epic_with_no_subs, subtask_4);
+
         // 2.1 обновление Task
         Task updatedTask = new Task(task_1.getTaskId(), "new task_1", task_1.getTaskDesc(), TaskStatus.IN_PROGRESS);
         taskManager.updateTask(updatedTask);
@@ -47,44 +53,52 @@ public class Main {
 
         // 3.1 получение Task / всех Tasks
         System.out.println("**Tasks**");
-        System.out.println(taskManager.getTaskById(task_1.getTaskId())); // после обновления
-        System.out.println(taskManager.getTaskById(task_2.getTaskId()));
+//        System.out.println(taskManager.getTaskById(task_1.getTaskId())); // после обновления
+//        System.out.println(taskManager.getTaskById(task_2.getTaskId()));
         System.out.println(taskManager.getAllTasks());
         System.out.println();
 
         // 3.2 получение Epic / всех Epics
         System.out.println("**Epics**");
-        System.out.println(taskManager.getEpicById(epic_with_no_subs.getTaskId()));
-        System.out.println(taskManager.getEpicById(epic_with_subs.getTaskId()));
+//        System.out.println(taskManager.getEpicById(epic_with_no_subs.getTaskId()));
+//        System.out.println(taskManager.getEpicById(epic_with_subs.getTaskId()));
         System.out.println(taskManager.getAllEpics());
         System.out.println();
 
         // 3.2.1 получение всех Subtasks по id Epic
         System.out.println("*Epic subtasks*");
-        System.out.println(taskManager.getAllSubtasksOfEpic(epic_with_subs.getTaskId()));
+        System.out.println(taskManager.getSubtasksByEpicId(epic_with_subs.getTaskId()));
+        System.out.println(taskManager.getSubtasksByEpicId(epic_with_no_subs.getTaskId()));
         System.out.println();
 
-        // 3.3 получение Subtask / всех Subtasks
+        // 3.3 получение Subtask / всех Subtasks (независимо от Эпика)
         System.out.println("*Subtasks*");
-        System.out.println(taskManager.getSubtaskById(subtask_1.getTaskId()));
-        System.out.println(taskManager.getSubtaskById(subtask_2.getTaskId()));
+//        System.out.println(taskManager.getSubtaskById(subtask_1.getTaskId()));
+//        System.out.println(taskManager.getSubtaskById(subtask_2.getTaskId()));
         System.out.println(taskManager.getAllSubtasks());
         System.out.println();
 
         // 4.1 удаление Task
         taskManager.deleteTaskById(task_1.getTaskId());
-        System.out.println(taskManager.getTaskById(task_1.getTaskId())); // проверка удаления task_1
+        System.out.println(taskManager.getTaskById(task_1.getTaskId())); // проверка удаления task_1  --  null
+
 
         // 4.2 удаление Epic
-        taskManager.deleteEpicById(epic_with_no_subs.getTaskId());
-        System.out.println(taskManager.getEpicById(epic_with_no_subs.getTaskId())); // проверка удаления epic_with_no_subtasks
+        taskManager.deleteEpicById(epic_with_subs.getTaskId());
+//        System.out.println(taskManager.getEpicById(epic_with_no_subs.getTaskId())); // проверка удаления epic_with_no_subtasks
+//        System.out.println(taskManager.getSubtaskById(epic_with_subs.getTaskId()));
+//        taskManager.deleteAllSubtasks();
+//        System.out.println(taskManager.getAllSubtasks());
+        System.out.println();
 
         // 4.3 удаление Subtask
-        taskManager.deleteSubtaskById(subtask_2.getTaskId());
-        System.out.println(taskManager.getSubtaskById(subtask_2.getTaskId())); // проверка удаления subtask_2
+        System.out.println(taskManager.getEpicById(epic_with_subs.getTaskId())); //  --  null
+        // выводятся сабтаск_3 и сабтаск_4, потому что epic_with_subs был удалён ранее
+        System.out.println(taskManager.getAllSubtasks());
 
-        /* Вывод пунктов 4.х  --  null, null, null */
-
+        taskManager.deleteSubtaskById(epic_with_no_subs, subtask_4.getTaskId());
+        // выводится сабтаск_3 после удаления сабтаск_4
+        System.out.println(taskManager.getAllSubtasks());
     }
 
 }

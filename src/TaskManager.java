@@ -30,7 +30,7 @@ public class TaskManager {
         tasks.put(task.getTaskId(), task);
     }
 
-    public Task getTaskById(int taskId) {
+    public Task getTaskById(Integer taskId) {
         return tasks.get(taskId);
     }
 
@@ -46,8 +46,8 @@ public class TaskManager {
         tasks.clear();
     }
 
-    public HashMap<Integer, Task> getAllTasks() {
-        return tasks;
+    public ArrayList<Task> getAllTasks() {
+        return new ArrayList<>(tasks.values());
     }
 
     /* МЕТОДЫ Epic */
@@ -66,20 +66,29 @@ public class TaskManager {
         epics.put(epic.getTaskId(), epic);
     }
 
-    public void deleteEpicById(Integer taskId) {
-        epics.remove(taskId);
+    public void deleteEpicById(Integer epicId) {
+        /* попытался сделать метод более простым и компактным, но без второго for
+        * выходит ошибка ConcurrentModificationException */
+        ArrayList<Subtask> subsToDelete = new ArrayList<>();
+        for (Subtask subtask : subtasks.values()) {
+            int epicIdToCheck = subtask.getEpicId();
+            if (epicIdToCheck == (epicId)) {
+                subsToDelete.add(subtask);
+            }
+        }
+        for (Subtask subtask : subsToDelete) {
+            subtasks.remove(subtask.getTaskId());
+        }
+        epics.remove(epicId);
     }
 
     public void deleteAllEpics() {
         epics.clear();
+        subtasks.clear();
     }
 
-    public HashMap<Integer, Epic> getAllEpics() {
-        return epics;
-    }
-
-    public ArrayList<Subtask> getAllSubtasksOfEpic(int taskId) {
-        return epics.get(taskId).getSubtasks(getEpicById(taskId));
+    public ArrayList<Epic> getAllEpics() {
+        return new ArrayList<>(epics.values());
     }
 
     /* МЕТОДЫ Subtask */
@@ -97,20 +106,36 @@ public class TaskManager {
         epic.calculateEpicStatus(epic);
     }
 
-    public void deleteSubtaskById(Integer taskId) {
-        subtasks.remove(taskId);
+    public void deleteSubtaskById(Epic epic, Integer subtaskId) {
+        subtasks.remove(subtaskId);
+        epic.deleteSubtask(subtaskId);
+        epic.calculateEpicStatus(epic);
     }
 
     public void deleteAllSubtasks() {
+        for (Epic epic : epics.values()) {
+            epic.deleteAllSubtasks();
+            epic.calculateEpicStatus(epic);
+        }
         subtasks.clear();
     }
 
-    public HashMap<Integer, Subtask> getAllSubtasks() {
-        return subtasks;
+    public ArrayList<Subtask> getAllSubtasks() {
+        return new ArrayList<>(subtasks.values());
     }
 
     public Subtask getSubtaskById(Integer taskId) {
         return subtasks.get(taskId);
+    }
+
+    public ArrayList<Subtask> getSubtasksByEpicId(Integer epicId) {
+        ArrayList<Subtask> epicSubtasks = new ArrayList<>();
+        for (Subtask subtask : subtasks.values()){
+            if (subtask.getEpicId().equals(epicId)){
+                epicSubtasks.add(subtask);
+            }
+        }
+        return epicSubtasks;
     }
 
     /* МЕГА ЧИСТКА */
@@ -120,3 +145,10 @@ public class TaskManager {
         subtasks.clear();
     }
 }
+
+/* Александру Ф.
+ * Добрый день, Александр!
+ * Спасибо за оперативную и конструктивную обратную связь!
+ * Постарался исправить все замечания, которые возникли.
+ *
+ * */
