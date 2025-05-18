@@ -62,24 +62,29 @@ public class TaskManager {
     }
 
     public void updateEpic(Epic epic) {
-        epic.calculateEpicStatus(epic);
         epics.put(epic.getTaskId(), epic);
+        epic.calculateEpicStatus(epic);
     }
 
     public void deleteEpicById(Integer epicId) {
+        final Epic epic = epics.remove(epicId);
+        for (Subtask subtask : epic.getSubtasks(epic)) {
+            subtasks.remove(subtask.getTaskId());
+            deleteSubtaskById(epic, subtask.getTaskId());
+        }
         /* попытался сделать метод более простым и компактным, но без второго for
         * выходит ошибка ConcurrentModificationException */
-        ArrayList<Subtask> subsToDelete = new ArrayList<>();
-        for (Subtask subtask : subtasks.values()) {
-            int epicIdToCheck = subtask.getEpicId();
-            if (epicIdToCheck == (epicId)) {
-                subsToDelete.add(subtask);
-            }
-        }
-        for (Subtask subtask : subsToDelete) {
-            subtasks.remove(subtask.getTaskId());
-        }
-        epics.remove(epicId);
+//        ArrayList<Subtask> subsToDelete = new ArrayList<>();
+//        for (Subtask subtask : subtasks.values()) {
+//            int epicIdToCheck = subtask.getEpicId();
+//            if (epicIdToCheck == (epicId)) {
+//                subsToDelete.add(subtask);
+//            }
+//        }
+//        for (Subtask subtask : subsToDelete) {
+//            subtasks.remove(subtask.getTaskId());
+//        }
+//        epics.remove(epicId);
     }
 
     public void deleteAllEpics() {

@@ -12,8 +12,9 @@ public class Epic extends Task {
     }
 
     // для обновления epic
-    public Epic(Integer taskId, String taskTitle, String taskDesc) {
+    public Epic(Epic epic, Integer taskId, String taskTitle, String taskDesc) {
         super(taskId, taskTitle, taskDesc);
+        subtasks = epic.getSubtasks(epic);
     }
 
     public void addSubtask(Subtask subtask) {
@@ -45,7 +46,6 @@ public class Epic extends Task {
 
     public ArrayList<Subtask> getSubtasks(Epic epic) {
         return subtasks;
-
     }
 
     public void replaceSubtask(Subtask subtask, Subtask subtaskToRemove) {
