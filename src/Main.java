@@ -1,3 +1,6 @@
+import managers.InMemoryTaskManager;
+import managers.Managers;
+import managers.TaskManager;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -7,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
 //        System.out.println("Поехали!");
-        TaskManager taskManager = new TaskManager();
+        TaskManager taskManager = Managers.getDefault();
 
         // TODO Написать тесты
 
@@ -79,12 +82,12 @@ public class Main {
         System.out.println();
 
         // 4.1 удаление Task
-        taskManager.deleteTaskById(task_1.getTaskId());
-        System.out.println(taskManager.getTaskById(task_1.getTaskId())); // проверка удаления task_1  --  null
+//        taskManager.deleteTaskById(task_1.getTaskId());
+//        System.out.println(taskManager.getTaskById(task_1.getTaskId())); // проверка удаления task_1  --  null
 
 
         // 4.2 удаление Epic
-        taskManager.deleteEpicById(epic_with_subs.getTaskId());
+//        taskManager.deleteEpicById(epic_with_subs.getTaskId());
 //        System.out.println(taskManager.getEpicById(epic_with_no_subs.getTaskId())); // проверка удаления epic_with_no_subtasks
 //        System.out.println(taskManager.getSubtaskById(epic_with_subs.getTaskId()));
 //        taskManager.deleteAllSubtasks();
@@ -92,13 +95,43 @@ public class Main {
         System.out.println();
 
         // 4.3 удаление Subtask
+        System.out.println("здесь");
+        taskManager.deleteAllSubtasksOfEpic(epic_with_subs.getEpicId());
         System.out.println(taskManager.getAllSubtasks());
-        taskManager.deleteSubtaskById(epic_with_no_subs, subtask_4.getTaskId());
-        System.out.println(taskManager.getEpicById(epic_with_subs.getTaskId())); //  --  null
+//        taskManager.deleteSubtaskById(epic_with_no_subs, subtask_4.getTaskId());
+//        System.out.println(taskManager.getEpicById(epic_with_subs.getTaskId())); //  --  null
         // выводятся сабтаск_3 и сабтаск_4, потому что epic_with_subs был удалён ранее
 
         // выводится сабтаск_3 после удаления сабтаск_4
         System.out.println(taskManager.getAllSubtasks());
+        System.out.println(taskManager.getAllEpics());
+        System.out.println();
+
+//
+        taskManager.getTaskById(task_1.getTaskId());
+        taskManager.getTaskById(task_1.getTaskId());
+        taskManager.getTaskById(task_1.getTaskId());
+        taskManager.getTaskById(task_1.getTaskId());
+        taskManager.getTaskById(task_2.getTaskId());
+        taskManager.getTaskById(task_1.getTaskId());
+        taskManager.getTaskById(task_1.getTaskId());
+        taskManager.getTaskById(task_1.getTaskId());
+        taskManager.getTaskById(task_1.getTaskId());
+        taskManager.getTaskById(task_1.getTaskId());
+        taskManager.getSubtaskById(subtask_2.getTaskId());
+        taskManager.getSubtaskById(subtask_4.getTaskId());
+        taskManager.getTaskById(task_1.getTaskId());
+        taskManager.getTaskById(task_2.getTaskId());
+        taskManager.getEpicById(epic_with_subs.getEpicId());
+        taskManager.getEpicById(epic_with_no_subs.getEpicId());
+        taskManager.getTaskById(task_1.getTaskId());
+        taskManager.getTaskById(updatedTask.getTaskId());
+        System.out.println("Здесь");
+        System.out.println(taskManager.getHistory().size());
+        for (Task task : taskManager.getHistory()) {
+            System.out.println(task);
+
+        }
     }
 
 }

@@ -3,40 +3,40 @@ package tasks;
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    private ArrayList<Subtask> subtasks;
+    private ArrayList<Subtask> epicSubtasks;
 
     // для создания epic
     public Epic(String taskTitle, String taskDesc) {
         super(taskTitle, taskDesc);
-        this.subtasks = new ArrayList<>();
+        this.epicSubtasks = new ArrayList<>();
     }
 
     // для обновления epic
     public Epic(Epic epic, Integer taskId, String taskTitle, String taskDesc) {
         super(taskId, taskTitle, taskDesc);
-        subtasks = epic.getSubtasks(epic);
+        epicSubtasks = epic.getSubtasks(epic);
     }
 
     public void addSubtask(Subtask subtask) {
-        subtasks.add(subtask);
+        epicSubtasks.add(subtask);
     }
 
     public void calculateEpicStatus(Epic epic) {
-        subtasks = getSubtasks(epic);
-        if (subtasks != null) {
+        epicSubtasks = getSubtasks(epic);
+        if (epicSubtasks != null & !epicSubtasks.isEmpty()) {
             int doneSubtasks = 0;
             int newSubtasks = 0;
-            for (Subtask sub : subtasks)
+            for (Subtask sub : epicSubtasks)
                 if (sub.getTaskStatus().equals(TaskStatus.DONE)) {
                     doneSubtasks++;
                 } else if (sub.getTaskStatus().equals(TaskStatus.NEW)) {
                     newSubtasks++;
                 }
-            if (doneSubtasks < subtasks.size() && newSubtasks < subtasks.size()) {
+            if (doneSubtasks < epicSubtasks.size() && newSubtasks < epicSubtasks.size()) {
                 setTaskStatus(TaskStatus.IN_PROGRESS);
-            } else if (doneSubtasks == subtasks.size()) {
+            } else if (doneSubtasks == epicSubtasks.size()) {
                 setTaskStatus(TaskStatus.DONE);
-            } else if (newSubtasks == subtasks.size()) {
+            } else if (newSubtasks == epicSubtasks.size()) {
                 setTaskStatus(TaskStatus.NEW);
             }
         } else {
@@ -45,21 +45,23 @@ public class Epic extends Task {
     }
 
     public ArrayList<Subtask> getSubtasks(Epic epic) {
-        return subtasks;
+        return epicSubtasks;
     }
 
     public void replaceSubtask(Subtask subtask, Subtask subtaskToRemove) {
-        subtasks.remove(subtaskToRemove);
-        subtasks.add(subtask);
+        epicSubtasks.remove(subtaskToRemove);
+        epicSubtasks.add(subtask);
     }
 
-    public void deleteSubtask(Integer subtaskId) {
-        subtasks.remove(subtaskId);
+    public void deleteSubtask(Subtask subtaskToDelete) {
+        // здесь косяк !!
+//        Subtask subtaskToDeleteFromEpic;
+        epicSubtasks.remove(subtaskToDelete);
     }
 
     public void deleteAllSubtasks() {
-        if (subtasks != null) {
-            subtasks.clear();
+        if (epicSubtasks != null) {
+            epicSubtasks.clear();
         }
     }
 
@@ -70,7 +72,7 @@ public class Epic extends Task {
     @Override
     public String toString() {
         return "Epic{" +
-                "subtasks=" + subtasks +
+                "subtasks=" + epicSubtasks +
                 ", epicId=" + getTaskId() +
                 ", epicTitle='" + getTaskTitle() + '\'' +
                 ", epicDesc='" + getTaskDesc() + '\'' +
