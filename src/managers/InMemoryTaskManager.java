@@ -91,19 +91,6 @@ public class InMemoryTaskManager implements TaskManager {
             subtasks.remove(subtask.getTaskId());
             deleteSubtaskById(epic, subtask.getTaskId());
         }
-        /* попытался сделать метод более простым и компактным, но без второго for
-        * выходит ошибка ConcurrentModificationException */
-//        ArrayList<Subtask> subsToDelete = new ArrayList<>();
-//        for (Subtask subtask : subtasks.values()) {
-//            int epicIdToCheck = subtask.getEpicId();
-//            if (epicIdToCheck == (epicId)) {
-//                subsToDelete.add(subtask);
-//            }
-//        }
-//        for (Subtask subtask : subsToDelete) {
-//            subtasks.remove(subtask.getTaskId());
-//        }
-//        epics.remove(epicId);
     }
 
     @Override
@@ -168,7 +155,6 @@ public class InMemoryTaskManager implements TaskManager {
             subtasks.remove(subtaskToDelete.getTaskId());
         }
         subtasksToDelete.clear();
-//        subtasks.clear();
     }
 
     @Override
@@ -197,7 +183,6 @@ public class InMemoryTaskManager implements TaskManager {
     // МЕТОДЫ, СВЯЗАННЫЕ С HISTORY
     @Override
     public List<Task> getHistory() {
-        // получить список истории
         return historyManager.getHistory();
     }
 
@@ -214,10 +199,3 @@ public class InMemoryTaskManager implements TaskManager {
         subtasks.clear();
     }
 }
-
-/* Александру Ф.
- * Добрый день, Александр!
- * Спасибо за оперативную и конструктивную обратную связь!
- * Постарался исправить все замечания, которые возникли.
- *
- * */

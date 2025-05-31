@@ -13,6 +13,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InMemoryTaskManagerTest {
 
+    /* Александру Ф.
+     * Добрый день, Александр!
+     * Заранее благодарю!
+     * */
+
     TaskManager taskManager = Managers.getDefault();
 
     @Test

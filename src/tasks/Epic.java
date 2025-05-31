@@ -54,8 +54,6 @@ public class Epic extends Task {
     }
 
     public void deleteSubtask(Subtask subtaskToDelete) {
-        // здесь косяк !!
-//        Subtask subtaskToDeleteFromEpic;
         epicSubtasks.remove(subtaskToDelete);
     }
 
