@@ -13,11 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InMemoryTaskManagerTest {
 
-    /* Александру Ф.
-     * Добрый день, Александр!
-     * Заранее благодарю!
-     * */
-
     TaskManager taskManager = Managers.getDefault();
 
     @Test
@@ -132,5 +127,29 @@ public class InMemoryTaskManagerTest {
         taskManager.getEpicById(epic_1.getEpicId());
         Assertions.assertThat(taskManager.getHistory().getFirst()).isEqualTo(task_1);
         Assertions.assertThat(taskManager.getHistory().getLast()).isEqualTo(epic_1);
+    }
+
+    @Test
+    public void ShouldNotAddTaskInHistoryIfTaskIsNull() {
+        Assertions.assertThat(taskManager.getHistory()).isEmpty();
+        Task task_1 = new Task("task_1", "task_1 desc", TaskStatus.NEW);
+        taskManager.createTask(task_1);
+
+        taskManager.getTaskById(task_1.getTaskId());
+        Assertions.assertThat(taskManager.getHistory()).isNotEmpty();
+
+        // обращение к несуществующей Task не вызывает NPE
+        taskManager.getTaskById(42);
+        // размер списка истории остаётся равен 1, значение null не добавляется в список с историей
+        Assertions.assertThat(taskManager.getHistory()).hasSize(1);
+
+        Epic epic_1 = new Epic("epic_1", "epic_1 desc");
+        taskManager.createEpic(epic_1);
+
+        taskManager.getEpicById(epic_1.getTaskId());
+        Assertions.assertThat(taskManager.getHistory()).hasSize(2);
+
+        taskManager.getEpicById(42);
+        Assertions.assertThat(taskManager.getHistory()).hasSize(2);
     }
 }

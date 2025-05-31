@@ -10,16 +10,24 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getHistory() {
-        return inMemoryHistory;
+        return List.copyOf(inMemoryHistory);
+
+        // alt.1
+        // List<Task> returnedCopy = List.copyOf(inMemoryHistory);
+        // return returnedCopy;
+
+        // alt.2
+        // return new ArrayList<>(inMemoryHistory);
     }
 
     @Override
     public void add(Task task) {
-        if (inMemoryHistory.size() < 10) {
-            inMemoryHistory.add(task);
-        } else {
+        if (task == null) {
+            return;
+        }
+        inMemoryHistory.add(task);
+        if (inMemoryHistory.size() > 10) {
             inMemoryHistory.removeFirst();
-            inMemoryHistory.add(task);
         }
     }
 }

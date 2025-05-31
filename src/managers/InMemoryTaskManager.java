@@ -1,3 +1,11 @@
+/* Александру Ф.
+ * Добрый день, Александр!
+ * Спасибо за (как и всегда) оперативную и содержательную оценку кода.
+ * Действительно, упустил момент, на который вы указывали к ТЗ 4,
+ * что методы возврата списка задач и эпиков должны возвращать копии списков, а не сами списки,
+ * что также справедливо и для истории просмотренных задач.
+ * */
+
 package managers;
 
 import tasks.Epic;
@@ -39,6 +47,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTaskById(Integer taskId) {
         Task task = tasks.get(taskId);
+        // проверка на null добавлена в общий метод add() в InMemoryHistoryManager
         addHistory(task);
         return task;
     }
