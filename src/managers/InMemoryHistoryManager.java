@@ -39,7 +39,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         removeNode(nodes.get(taskId));
     }
 
-    public void linkLast (Task task) {
+    public void linkLast(Task task) {
         // новая нода
         Node node = new Node(task, last, null);
         if (first == null) {
