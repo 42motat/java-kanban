@@ -1,11 +1,3 @@
-/* Александру Ф.
- * Добрый день, Александр!
- * Спасибо за (как и всегда) оперативную и содержательную оценку кода.
- * Действительно, упустил момент, на который вы указывали к ТЗ 4,
- * что методы возврата списка задач и эпиков должны возвращать копии списков, а не сами списки,
- * что также справедливо и для истории просмотренных задач.
- * */
-
 package managers;
 
 import tasks.Epic;
@@ -23,9 +15,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     private HistoryManager historyManager = Managers.getDefaultHistory();
 
-    private int taskGeneratorId = 1;
-    private int epicGeneratorId = 1;
-    private int subtaskGeneratorId = 1;
+    // изменён порядок номеров задач, чтобы не было коллизий в новой реализации хранения истории
+    private int taskGeneratorId = 100001;
+    private int epicGeneratorId = 200001;
+    private int subtaskGeneratorId = 900001;
 
     private int getNextTaskId() {
         return taskGeneratorId++;
@@ -60,10 +53,14 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTaskById(int taskId) {
         tasks.remove(taskId);
+        removeHistory(taskId);
     }
 
     @Override
     public void deleteAllTasks() {
+        for (Task task : tasks.values()) {
+            removeHistory(task.getTaskId());
+        }
         tasks.clear();
     }
 
@@ -96,6 +93,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteEpicById(Integer epicId) {
         final Epic epic = epics.remove(epicId);
+        removeHistory(epicId);
         for (Subtask subtask : epic.getSubtasks(epic)) {
             subtasks.remove(subtask.getTaskId());
             deleteSubtaskById(epic, subtask.getTaskId());
@@ -104,6 +102,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllEpics() {
+        for (Epic epic : epics.values()) {
+            for (Subtask subtaskToGet : subtasks.values()) {
+                if (subtaskToGet.getEpicId().equals(epic.getEpicId())) {
+                    removeHistory(subtaskToGet.getTaskId());
+                }
+            }
+            removeHistory(epic.getEpicId());
+        }
         epics.clear();
         subtasks.clear();
     }
@@ -134,6 +140,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteSubtaskById(Epic epic, Integer subtaskId) {
         Subtask subtaskToDelete = subtasks.get(subtaskId);
         subtasks.remove(subtaskId);
+        removeHistory(subtaskId);
         epic.deleteSubtask(subtaskToDelete);
         epic.calculateEpicStatus(epic);
     }
@@ -198,6 +205,10 @@ public class InMemoryTaskManager implements TaskManager {
     public void addHistory(Task task) {
         // метод добавляет таск в историю
         historyManager.add(task);
+    }
+
+    public void removeHistory(Integer id) {
+        historyManager.remove(id);
     }
 
     /* МЕГА ЧИСТКА */

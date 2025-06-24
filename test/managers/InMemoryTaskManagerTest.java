@@ -100,7 +100,7 @@ public class InMemoryTaskManagerTest {
         taskManager.getTaskById(task_1.getTaskId());
         taskManager.getTaskById(task_1.getTaskId());
         taskManager.getTaskById(task_1.getTaskId()); // #4
-        Assertions.assertThat(taskManager.getHistory().size()).isEqualTo(4);
+        Assertions.assertThat(taskManager.getHistory().size()).isEqualTo(1);
         Epic epic_1 = new Epic("epic_1", "epic_1 desc");
         taskManager.createEpic(epic_1);
         taskManager.getEpicById(epic_1.getEpicId());
@@ -109,21 +109,12 @@ public class InMemoryTaskManagerTest {
         taskManager.getEpicById(epic_1.getEpicId());
         taskManager.getTaskById(task_1.getTaskId());
         taskManager.getTaskById(task_1.getTaskId()); // #10
-        Assertions.assertThat(taskManager.getHistory().size()).isEqualTo(10);
-        taskManager.getEpicById(epic_1.getEpicId());
+        // после нескольких вызовов таск и эпик в списке истории остаются только две записи
+        Assertions.assertThat(taskManager.getHistory().size()).isEqualTo(2);
         taskManager.getTaskById(task_1.getTaskId()); // #10
-        Assertions.assertThat(taskManager.getHistory().size()).isEqualTo(10);
         // последним был добавлен task_1
         Assertions.assertThat(taskManager.getHistory().getLast()).isEqualTo(task_1);
         taskManager.getTaskById(task_1.getTaskId()); // #1
-        taskManager.getEpicById(epic_1.getEpicId());
-        taskManager.getEpicById(epic_1.getEpicId());
-        taskManager.getEpicById(epic_1.getEpicId());
-        taskManager.getEpicById(epic_1.getEpicId());
-        taskManager.getEpicById(epic_1.getEpicId());
-        taskManager.getEpicById(epic_1.getEpicId());
-        taskManager.getEpicById(epic_1.getEpicId());
-        taskManager.getEpicById(epic_1.getEpicId());
         taskManager.getEpicById(epic_1.getEpicId());
         Assertions.assertThat(taskManager.getHistory().getFirst()).isEqualTo(task_1);
         Assertions.assertThat(taskManager.getHistory().getLast()).isEqualTo(epic_1);
