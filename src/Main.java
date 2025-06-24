@@ -1,15 +1,15 @@
 import managers.Managers;
 import managers.TaskManager;
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Task;
-import tasks.TaskStatus;
+//import tasks.Epic;
+//import tasks.Subtask;
+//import tasks.Task;
+//import tasks.TaskStatus;
 
 public class Main {
 
     public static void main(String[] args) {
 //        System.out.println("Поехали!");
-        TaskManager taskManager = Managers.getDefault();
+//        TaskManager taskManager = Managers.getDefault();
 
         // TODO Написать тесты
 
