@@ -23,9 +23,11 @@ public class InMemoryTaskManager implements TaskManager {
     private int getNextTaskId() {
         return taskGeneratorId++;
     }
+
     private int getNextEpicId() {
         return epicGeneratorId++;
     }
+
     private int getNextSubtaskId() {
         return subtaskGeneratorId++;
     }
@@ -188,8 +190,8 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public ArrayList<Subtask> getSubtasksByEpicId(Integer epicId) {
         ArrayList<Subtask> epicSubtasks = new ArrayList<>();
-        for (Subtask subtask : subtasks.values()){
-            if (subtask.getEpicId().equals(epicId)){
+        for (Subtask subtask : subtasks.values()) {
+            if (subtask.getEpicId().equals(epicId)) {
                 epicSubtasks.add(subtask);
             }
         }
