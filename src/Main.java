@@ -1,4 +1,3 @@
-import managers.InMemoryTaskManager;
 import managers.Managers;
 import managers.TaskManager;
 import tasks.Epic;
@@ -15,38 +14,38 @@ public class Main {
         // TODO Написать тесты
 
         // 1.1 создание Task
-        Task task_1 = new Task("task_1", "task_1 desc", TaskStatus.NEW);
-        taskManager.createTask(task_1);
-        Task task_2 = new Task("task_2", "task_2 desk", TaskStatus.NEW);
-        taskManager.createTask(task_2);
-        Task task_3 = new Task("task_3", "task_3 desc", TaskStatus.NEW);
-        taskManager.createTask(task_3);
-        Task task_4 = new Task("task_4", "task_4 desk", TaskStatus.NEW);
-        taskManager.createTask(task_4);
+//        Task task_1 = new Task("task_1", "task_1 desc", TaskStatus.NEW);
+//        taskManager.createTask(task_1);
+//        Task task_2 = new Task("task_2", "task_2 desk", TaskStatus.NEW);
+//        taskManager.createTask(task_2);
+//        Task task_3 = new Task("task_3", "task_3 desc", TaskStatus.NEW);
+//        taskManager.createTask(task_3);
+//        Task task_4 = new Task("task_4", "task_4 desk", TaskStatus.NEW);
+//        taskManager.createTask(task_4);
 
         // 1.2 создание Epic
-        Epic epic_with_subs = new Epic("epic_with_subs", "desc of epic with subs");
-        taskManager.createEpic(epic_with_subs);
-        Epic epic_with_no_subs = new Epic("epic_with_no_subs", "desc of epic with no subs");
-        taskManager.createEpic(epic_with_no_subs);
-        Epic new_epic_with_no_subs = new Epic("new_epic_with_no_subs", "desc of REAL epic with no subs");
-        taskManager.createEpic(new_epic_with_no_subs);
+//        Epic epic_with_subs = new Epic("epic_with_subs", "desc of epic with subs");
+//        taskManager.createEpic(epic_with_subs);
+//        Epic epic_with_no_subs = new Epic("epic_with_no_subs", "desc of epic with no subs");
+//        taskManager.createEpic(epic_with_no_subs);
+//        Epic new_epic_with_no_subs = new Epic("new_epic_with_no_subs", "desc of REAL epic with no subs");
+//        taskManager.createEpic(new_epic_with_no_subs);
 
         // 1.3 создание Subtask
-        Subtask subtask_1 = new Subtask("subtask_1", "subtask_1 desc", epic_with_subs.getEpicId());
-        taskManager.createSubtask(epic_with_subs, subtask_1);
-        Subtask subtask_2 = new Subtask("subtask_2", "subtask_2 desc", epic_with_subs.getEpicId());
-        taskManager.createSubtask(epic_with_subs, subtask_2);
+//        Subtask subtask_1 = new Subtask("subtask_1", "subtask_1 desc", epic_with_subs.getEpicId());
+//        taskManager.createSubtask(epic_with_subs, subtask_1);
+//        Subtask subtask_2 = new Subtask("subtask_2", "subtask_2 desc", epic_with_subs.getEpicId());
+//        taskManager.createSubtask(epic_with_subs, subtask_2);
 
         // * для проверки удаления подзадач Эпика при удалении самого Эпика
-        Subtask subtask_3 = new Subtask("subtask_3", "subtask_3 desc", epic_with_no_subs.getEpicId());
-        taskManager.createSubtask(epic_with_no_subs, subtask_3);
-        Subtask subtask_4 = new Subtask("subtask_4", "subtask_4 desc", epic_with_no_subs.getEpicId());
-        taskManager.createSubtask(epic_with_no_subs, subtask_4);
-
+//        Subtask subtask_3 = new Subtask("subtask_3", "subtask_3 desc", epic_with_no_subs.getEpicId());
+//        taskManager.createSubtask(epic_with_no_subs, subtask_3);
+//        Subtask subtask_4 = new Subtask("subtask_4", "subtask_4 desc", epic_with_no_subs.getEpicId());
+//        taskManager.createSubtask(epic_with_no_subs, subtask_4);
+//
         // 2.1 обновление Task
-        Task updatedTask = new Task(task_1.getTaskId(), "new task_1", task_1.getTaskDesc(), TaskStatus.IN_PROGRESS);
-        taskManager.updateTask(updatedTask);
+//        Task updatedTask = new Task(task_1.getTaskId(), "new task_1", task_1.getTaskDesc(), TaskStatus.IN_PROGRESS);
+//        taskManager.updateTask(updatedTask);
 
         // 2.2 обновление Epic
 //        Epic epicToUpdate = new Epic(epic_with_no_subs, epic_with_no_subs.getTaskId(), "new epic_with_no_subs", "new desc");
@@ -113,50 +112,50 @@ public class Main {
 //        System.out.println();
 
         // обновленные тесты истории
-        taskManager.getTaskById(task_1.getTaskId());
-        taskManager.getTaskById(task_1.getTaskId());
-        taskManager.getTaskById(task_1.getTaskId());
-        taskManager.getTaskById(task_2.getTaskId());
-        taskManager.getTaskById(task_2.getTaskId());
-        taskManager.getTaskById(task_1.getTaskId());
-        taskManager.getTaskById(task_1.getTaskId());
-        taskManager.getTaskById(task_1.getTaskId());
-        taskManager.getTaskById(task_1.getTaskId());
-        taskManager.getTaskById(task_2.getTaskId());
-        taskManager.getTaskById(task_1.getTaskId());
-        taskManager.getTaskById(task_1.getTaskId());
-        taskManager.getSubtaskById(subtask_2.getTaskId());
-        taskManager.getSubtaskById(subtask_4.getTaskId());
-        taskManager.getTaskById(task_2.getTaskId());
-        taskManager.getTaskById(task_1.getTaskId());
-        taskManager.getEpicById(epic_with_subs.getEpicId());
-        taskManager.getEpicById(epic_with_no_subs.getEpicId());
-        taskManager.getEpicById(new_epic_with_no_subs.getEpicId());
-        System.out.println(taskManager.getHistory().size());
-        for (Task task : taskManager.getHistory()) {
-            System.out.println(task);
-        }
-        taskManager.getTaskById(task_4.getTaskId());
-        taskManager.getTaskById(task_3.getTaskId());
-        taskManager.getTaskById(task_1.getTaskId());
-        taskManager.deleteTaskById(task_2.getTaskId());
-        taskManager.deleteEpicById(epic_with_subs.getEpicId());
-        taskManager.deleteSubtaskById(epic_with_no_subs, subtask_3.getTaskId());
-        taskManager.getEpicById(epic_with_no_subs.getEpicId());
-        System.out.println(taskManager.getHistory().size());
-        for (Task task : taskManager.getHistory()) {
-            System.out.println(task);
-        }
-        taskManager.deleteAllTasks();
-        System.out.println(taskManager.getHistory().size());
-        for (Task task : taskManager.getHistory()) {
-            System.out.println(task);
-        }
-        taskManager.deleteAllEpics();
-        System.out.println(taskManager.getHistory().size());
-        for (Task task : taskManager.getHistory()) {
-            System.out.println(task);
-        }
+//        taskManager.getTaskById(task_1.getTaskId());
+//        taskManager.getTaskById(task_1.getTaskId());
+//        taskManager.getTaskById(task_1.getTaskId());
+//        taskManager.getTaskById(task_2.getTaskId());
+//        taskManager.getTaskById(task_2.getTaskId());
+//        taskManager.getTaskById(task_1.getTaskId());
+//        taskManager.getTaskById(task_1.getTaskId());
+//        taskManager.getTaskById(task_1.getTaskId());
+//        taskManager.getTaskById(task_1.getTaskId());
+//        taskManager.getTaskById(task_2.getTaskId());
+//        taskManager.getTaskById(task_1.getTaskId());
+//        taskManager.getTaskById(task_1.getTaskId());
+//        taskManager.getSubtaskById(subtask_2.getTaskId());
+//        taskManager.getSubtaskById(subtask_4.getTaskId());
+//        taskManager.getTaskById(task_2.getTaskId());
+//        taskManager.getTaskById(task_1.getTaskId());
+//        taskManager.getEpicById(epic_with_subs.getEpicId());
+//        taskManager.getEpicById(epic_with_no_subs.getEpicId());
+//        taskManager.getEpicById(new_epic_with_no_subs.getEpicId());
+//        System.out.println(taskManager.getHistory().size());
+//        for (Task task : taskManager.getHistory()) {
+//            System.out.println(task);
+//        }
+//        taskManager.getTaskById(task_4.getTaskId());
+//        taskManager.getTaskById(task_3.getTaskId());
+//        taskManager.getTaskById(task_1.getTaskId());
+//        taskManager.deleteTaskById(task_2.getTaskId());
+//        taskManager.deleteEpicById(epic_with_subs.getEpicId());
+//        taskManager.deleteSubtaskById(epic_with_no_subs, subtask_3.getTaskId());
+//        taskManager.getEpicById(epic_with_no_subs.getEpicId());
+//        System.out.println(taskManager.getHistory().size());
+//        for (Task task : taskManager.getHistory()) {
+//            System.out.println(task);
+//        }
+//        taskManager.deleteAllTasks();
+//        System.out.println(taskManager.getHistory().size());
+//        for (Task task : taskManager.getHistory()) {
+//            System.out.println(task);
+//        }
+//        taskManager.deleteAllEpics();
+//        System.out.println(taskManager.getHistory().size());
+//        for (Task task : taskManager.getHistory()) {
+//            System.out.println(task);
+//        }
 
     }
 
