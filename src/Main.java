@@ -118,17 +118,23 @@ public class Main {
 //        taskManager.getTaskById(task_2.getTaskId());
 //        taskManager.getTaskById(task_2.getTaskId());
 //        taskManager.getTaskById(task_1.getTaskId());
-//        taskManager.getTaskById(task_1.getTaskId());
-//        taskManager.getTaskById(task_1.getTaskId());
+//        taskManager.getTaskById(task_2.getTaskId());
 //        taskManager.getTaskById(task_1.getTaskId());
 //        taskManager.getTaskById(task_2.getTaskId());
 //        taskManager.getTaskById(task_1.getTaskId());
+//        taskManager.getTaskById(task_2.getTaskId());
 //        taskManager.getTaskById(task_1.getTaskId());
 //        taskManager.getSubtaskById(subtask_2.getTaskId());
 //        taskManager.getSubtaskById(subtask_4.getTaskId());
 //        taskManager.getTaskById(task_2.getTaskId());
 //        taskManager.getTaskById(task_1.getTaskId());
 //        taskManager.getEpicById(epic_with_subs.getEpicId());
+//        taskManager.getEpicById(epic_with_no_subs.getEpicId());
+//        taskManager.getEpicById(new_epic_with_no_subs.getEpicId());
+//        taskManager.getEpicById(epic_with_no_subs.getEpicId());
+//        taskManager.getEpicById(new_epic_with_no_subs.getEpicId());
+//        taskManager.getEpicById(epic_with_no_subs.getEpicId());
+//        taskManager.getEpicById(new_epic_with_no_subs.getEpicId());
 //        taskManager.getEpicById(epic_with_no_subs.getEpicId());
 //        taskManager.getEpicById(new_epic_with_no_subs.getEpicId());
 //        System.out.println(taskManager.getHistory().size());
@@ -156,7 +162,5 @@ public class Main {
 //        for (Task task : taskManager.getHistory()) {
 //            System.out.println(task);
 //        }
-
     }
-
 }

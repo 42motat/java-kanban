@@ -127,8 +127,8 @@ public class InMemoryTaskManagerTest {
         // последним был добавлен task_1
 //        Assertions.assertThat(taskManager.getHistory().getLast()).isEqualTo(task_1);
         Assertions.assertEquals(taskManager.getHistory().getLast(), task_1);
-        taskManager.getTaskById(task_1.getTaskId()); // #1
-        taskManager.getEpicById(epic_1.getEpicId());
+        taskManager.getTaskById(task_1.getTaskId()); // first
+        taskManager.getEpicById(epic_1.getEpicId()); // last
 //        Assertions.assertThat(taskManager.getHistory().getFirst()).isEqualTo(task_1);
         Assertions.assertEquals(taskManager.getHistory().getFirst(), task_1);
 //        Assertions.assertThat(taskManager.getHistory().getLast()).isEqualTo(epic_1);

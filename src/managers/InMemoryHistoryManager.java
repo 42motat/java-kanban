@@ -1,7 +1,8 @@
 /* Александру Ф.
  * Добрый день, Александр!
- * Заранее благодарю за обратную связь по ФЗ ТЗ 6.
- * Прошу прощения, что задержал сдачу проекта до начала спринта 7 (пришлось попотеть над этим заданием).
+ * Постарался исправить все замечания в коде.
+ * Касательно закомментированного на 99.99% Main отписал в комментарии.
+ * Касательно общего генератора ID также отписал в комментарии.
  */
 
 package managers;
@@ -12,16 +13,21 @@ import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    Map<Integer, Node> nodes = new HashMap<>();
-    Node first;
-    Node last;
-
-    List<Task> linkedTaskList = new ArrayList<>();
-    List<Task> inMemoryHistory = new ArrayList<>();
+    private Map<Integer, Node> nodes = new HashMap<>();
+    private Node first;
+    private Node last;
 
     @Override
     public List<Task> getHistory() {
-        return List.copyOf(inMemoryHistory);
+        List<Task> returnedTasks = new ArrayList<>();
+
+        Node node = first;
+        while (node != null) {
+            returnedTasks.add(node.task);
+            node = node.next;
+        }
+
+        return List.copyOf(returnedTasks);
     }
 
     @Override
@@ -31,7 +37,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         removeNode(nodes.get(task.getTaskId()));
         linkLast(task);
-        getTasks();
     }
 
     @Override
@@ -48,34 +53,29 @@ public class InMemoryHistoryManager implements HistoryManager {
             last.next = node;
         }
         last = node;
-        // в список идёт ЗАДАЧА, а не НОДА
-        linkedTaskList.add(task);
         nodes.put(task.getTaskId(), last);
-    }
-
-    public void getTasks() {
-        inMemoryHistory.add(last.task);
     }
 
     public void removeNode(Node node) {
         if (node == null) {
             return;
         }
-        if (node.previous == null && node.next == null) {
-            nodes.remove(node.task.getTaskId());
-            linkedTaskList.remove(node.task);
-            inMemoryHistory.remove(node.task);
-        } else if (node.previous == null) {
-            node.next.previous = null;
-        } else if (node.next == null) {
-            node.previous.next = null;
-        } else {
+
+        if (nodes.size() == 1) {  // == (node.equals(first)) & (node.equals(last));
+            last.previous = null;
+            first = null;
+            last = null;
+        } else if ((node.equals(first)) & (node.next != null)) {
+            first = node.next;
+            first.previous = null;
+        } else if ((node.equals(last)) & (node.previous != null)) {
+            last = node.previous;
+            first.next = null;
+        } else if ((node.next != null) & (node.previous != null)) {
             node.previous.next = node.next;
             node.next.previous = node.previous;
         }
         nodes.remove(node.task.getTaskId());
-        linkedTaskList.remove(node.task);
-        inMemoryHistory.remove(node.task);
     }
 
     public static class Node {
