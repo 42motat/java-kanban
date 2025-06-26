@@ -1,23 +1,33 @@
+/* Александру Ф.
+ * Добрый день, Александр!
+ * Постарался исправить все замечания в коде.
+ * Касательно закомментированного на 99.99% Main отписал в комментарии.
+ * Касательно общего генератора ID также отписал в комментарии.
+ */
+
 package managers;
 
 import tasks.Task;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private List<Task> inMemoryHistory = new ArrayList<>();
+
+    private Map<Integer, Node> nodes = new HashMap<>();
+    private Node first;
+    private Node last;
 
     @Override
     public List<Task> getHistory() {
-        return List.copyOf(inMemoryHistory);
+        List<Task> returnedTasks = new ArrayList<>();
 
-        // alt.1
-        // List<Task> returnedCopy = List.copyOf(inMemoryHistory);
-        // return returnedCopy;
+        Node node = first;
+        while (node != null) {
+            returnedTasks.add(node.task);
+            node = node.next;
+        }
 
-        // alt.2
-        // return new ArrayList<>(inMemoryHistory);
+        return List.copyOf(returnedTasks);
     }
 
     @Override
@@ -25,9 +35,58 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (task == null) {
             return;
         }
-        inMemoryHistory.add(task);
-        if (inMemoryHistory.size() > 10) {
-            inMemoryHistory.removeFirst();
+        removeNode(nodes.get(task.getTaskId()));
+        linkLast(task);
+    }
+
+    @Override
+    public void remove(Integer taskId) {
+        removeNode(nodes.get(taskId));
+    }
+
+    public void linkLast(Task task) {
+        // новая нода
+        Node node = new Node(task, last, null);
+        if (first == null) {
+            first = node;
+        } else {
+            last.next = node;
+        }
+        last = node;
+        nodes.put(task.getTaskId(), last);
+    }
+
+    public void removeNode(Node node) {
+        if (node == null) {
+            return;
+        }
+
+        if (nodes.size() == 1) {  // == (node.equals(first)) & (node.equals(last));
+            last.previous = null;
+            first = null;
+            last = null;
+        } else if ((node.equals(first)) & (node.next != null)) {
+            first = node.next;
+            first.previous = null;
+        } else if ((node.equals(last)) & (node.previous != null)) {
+            last = node.previous;
+            first.next = null;
+        } else if ((node.next != null) & (node.previous != null)) {
+            node.previous.next = node.next;
+            node.next.previous = node.previous;
+        }
+        nodes.remove(node.task.getTaskId());
+    }
+
+    public static class Node {
+        Task task;
+        Node previous;
+        Node next;
+
+        public Node(Task task, Node previous, Node next) {
+            this.task = task;
+            this.previous = previous;
+            this.next = next;
         }
     }
 }
