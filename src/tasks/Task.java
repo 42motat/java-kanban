@@ -74,12 +74,6 @@ public class Task {
 
         Task task = (Task) o;
         return Objects.equals(taskId, task.taskId);
-        /* Также советуем применить знания о методах equals() и hashCode(), чтобы реализовать идентификацию задачи по её id.
-         * !! При этом две задачи с одинаковым id должны выглядеть для менеджера как одна и та же. !!
-         * выше указана причина изменения в переопределении метода equals; взято из ТЗ к четвёртому спринту. */
-//              && Objects.equals(taskTitle, task.taskTitle) &&
-//               Objects.equals(taskDesc, task.taskDesc) &&
-//               taskStatus == task.taskStatus;
     }
 
     @Override
