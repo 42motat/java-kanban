@@ -17,13 +17,19 @@ public class Epic extends Task {
         epicSubtasks = epic.getSubtasks(epic);
     }
 
+    // для использования в fromString
+    public Epic(Integer taskId, String taskTitle, String taskDesc, TaskStatus taskStatus) {
+        super(taskId, taskTitle, taskDesc, taskStatus);
+        epicSubtasks = new ArrayList<>();
+    }
+
     public void addSubtask(Subtask subtask) {
         epicSubtasks.add(subtask);
     }
 
     public void calculateEpicStatus(Epic epic) {
         epicSubtasks = getSubtasks(epic);
-        if (epicSubtasks != null & !epicSubtasks.isEmpty()) {
+        if (epicSubtasks != null && !epicSubtasks.isEmpty()) {
             int doneSubtasks = 0;
             int newSubtasks = 0;
             for (Subtask sub : epicSubtasks)

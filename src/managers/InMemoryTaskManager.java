@@ -9,16 +9,16 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-    private HashMap<Integer, Task> tasks = new HashMap<>();
-    private HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private HashMap<Integer, Epic> epics = new HashMap<>();
+    protected HashMap<Integer, Task> tasks = new HashMap<>();
+    protected HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    protected HashMap<Integer, Epic> epics = new HashMap<>();
 
     private HistoryManager historyManager = Managers.getDefaultHistory();
 
     // изменён порядок номеров задач, чтобы не было коллизий в новой реализации хранения истории
-    private int taskGeneratorId = 100001;
-    private int epicGeneratorId = 200001;
-    private int subtaskGeneratorId = 900001;
+    protected static int taskGeneratorId = 100001;
+    protected static int epicGeneratorId = 200001;
+    protected static int subtaskGeneratorId = 900001;
 
     private int getNextTaskId() {
         return taskGeneratorId++;
