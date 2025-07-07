@@ -23,8 +23,9 @@ public class FileBackedTaskManagerTest {
 
     @Test
     void shouldWorkWithTasksFromFile() throws IOException {
-        File path = new File("E:\\Coding\\Codes\\Java\\Yandex_Practicum\\second_module\\7_seventh_sprint\\final_task\\java-kanban\\src\\recources");
-        File file = File.createTempFile("some_tasks", ".csv", path);
+//        File path = new File("E:\\Coding\\Codes\\Java\\Yandex_Practicum\\second_module\\7_seventh_sprint\\final_task\\java-kanban\\src\\recources");
+//        File file = File.createTempFile("some_tasks", ".csv", path);
+        File file = File.createTempFile("some_tasks", ".csv");
         FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
 
         Task task_1 = new Task("task_1", "task_1 desc", TaskStatus.NEW);
