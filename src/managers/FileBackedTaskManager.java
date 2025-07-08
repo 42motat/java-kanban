@@ -1,6 +1,7 @@
 /* Александру Ф.
  * Добрый день, Александр!
- * Заранее благодарю за код-ревью.
+ * Спасибо за обратную связь по заданию.
+ * Постарался исправить замечания и сделать небольшой рефакторинг.
  */
 
 package managers;
@@ -9,6 +10,7 @@ import exceptions.ManagerSaveException;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
+import tasks.TaskTypes;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -28,7 +30,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
         try {
             if (!file.exists()) {
-                throw new ManagerSaveException("Ошибка чтения файла");
+                throw new ManagerSaveException("Ошибка чтения файла: файл не существует");
             }
             String oneBigString = Files.readString(file.toPath());
 
@@ -36,19 +38,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
             for (int i = 1; i < splitLines.length; i++) {
                 Task task = CSVFormatter.fromString(splitLines[i]);
-                if (task instanceof Epic) {
-//                    taskManager.epics.put(task.getTaskId(), (Epic) task);
+                if (task.getType() == TaskTypes.EPIC) {
                     taskManager.createEpic((Epic) task);
-                } else if (task instanceof Subtask) {
+                } else if (task.getType() == TaskTypes.SUBTASK) {
                     taskManager.createSubtask((taskManager.getEpicById(((Subtask) task).getEpicId())), (Subtask) task);
-                } else if (task instanceof Task) {
+                } else if (task.getType() == TaskTypes.TASK) {
                     taskManager.createTask(task);
                 }
             }
 
-        } catch (IOException | ManagerSaveException e) {
-            // обработка исключения
-            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            // настроено наследование ManagerSaveException от RuntimeException,
+            // чтобы не менять сигнатуру save() с помощью throws
+            throw new ManagerSaveException("Ошибка при чтении файла: " + e.getMessage());
         }
 
         return taskManager;
@@ -63,10 +65,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            if (!file.exists()) {
-                throw new ManagerSaveException("Ошибка чтения файла");
-            }
-
             // 1. заголовок
             writer.write(CSVFormatter.getHeader());
             writer.newLine();
@@ -87,9 +85,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 writer.newLine();
             }
 
-        } catch (IOException | ManagerSaveException e) {
-            // информация об исключении
-            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            throw new ManagerSaveException("Ошибка при записи в файл: " + e.getMessage());
         }
     }
 

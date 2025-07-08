@@ -17,9 +17,9 @@ public class CSVFormatter {
     */
 
     public static String toString(Task task) {
-        String taskToString = task.getTaskId() + "," + checkTaskType(task) + "," + task.getTaskTitle() + "," +
+        String taskToString = task.getTaskId() + "," + task.getType() + "," + task.getTaskTitle() + "," +
                               task.getTaskStatus() + "," + task.getTaskDesc() + ",";
-        if (task instanceof Subtask) {
+        if (task.getType().equals(TaskTypes.SUBTASK)) {
             taskToString = taskToString + ((Subtask) task).getEpicId();
 //        }
         } else {
@@ -28,14 +28,8 @@ public class CSVFormatter {
         return taskToString;
     }
 
-    private static TaskTypes checkTaskType(Task task) {
-        if (task instanceof Epic) {
-            return TaskTypes.EPIC;
-        } else if (task instanceof Subtask) {
-            return TaskTypes.SUBTASK;
-        }
-        return TaskTypes.TASK;
-    }
+    // при определении в Task метода getType() метод checkTaskType() оказался не нужен,
+    // поскольку проще сразу вызывать getType()
 
     public static Task fromString(String line) throws ManagerSaveException {
         String[] taskParams = line.split(",");

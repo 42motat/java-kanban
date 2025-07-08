@@ -36,6 +36,10 @@ public class Task {
         this.taskDesc = taskDesc;
     }
 
+    public TaskTypes getType() {
+        return TaskTypes.TASK;
+    }
+
     public Integer getTaskId() {
         return taskId;
     }

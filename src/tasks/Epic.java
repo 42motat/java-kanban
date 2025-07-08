@@ -23,6 +23,11 @@ public class Epic extends Task {
         epicSubtasks = new ArrayList<>();
     }
 
+    @Override
+    public TaskTypes getType() {
+        return TaskTypes.EPIC;
+    }
+
     public void addSubtask(Subtask subtask) {
         epicSubtasks.add(subtask);
     }
