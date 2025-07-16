@@ -1,0 +1,10 @@
+id,type,name,status,description,epic
+100001,TASK,new_task_1,IN_PROGRESS,task_1 desc,
+100003,TASK,task_3,NEW,task_3 desc,
+100002,TASK,task_2,NEW,task_2 desk,
+100004,TASK,task_4,NEW,task_4 desc,
+200003,EPIC,new_epic_with_no_subs,NEW,desc of REAL epic with no subs,
+200002,EPIC,epic_with_no_subs,NEW,desc of epic with no subs,
+200001,EPIC,epic_with_subs,NEW,desc of epic with subs,
+900001,SUBTASK,subtask_1,NEW,subtask_1 desc,200001
+900002,SUBTASK,subtask_2,NEW,subtask_2 desc,200001
