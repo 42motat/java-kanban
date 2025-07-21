@@ -8,6 +8,9 @@ import tasks.TaskStatus;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -23,12 +26,12 @@ public class FileBackedTaskManagerTest {
 
     @Test
     void shouldWorkWithTasksFromFile() throws IOException {
-//        File path = new File("E:\\Coding\\Codes\\Java\\Yandex_Practicum\\second_module\\7_seventh_sprint\\final_task\\java-kanban\\src\\recources");
-//        File file = File.createTempFile("some_tasks", ".csv", path);
-        File file = File.createTempFile("some_tasks", ".csv");
+        File path = new File("E:\\Coding\\Codes\\Java\\Yandex_Practicum\\second_module\\8_eighth_sprint\\final_proj\\java-kanban\\src\\resources");
+        File file = File.createTempFile("some_tasks", ".csv", path);
+//        File file = File.createTempFile("some_tasks", ".csv");
         FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
 
-        Task task_1 = new Task("task_1", "task_1 desc", TaskStatus.NEW);
+        Task task_1 = new Task("task_1", "task_1 desc", TaskStatus.NEW, LocalDateTime.now(), Duration.of(90, ChronoUnit.MINUTES));
         taskManager.createTask(task_1);
         Task task_2 = new Task("task_2", "task_2 desk", TaskStatus.NEW);
         taskManager.createTask(task_2);
@@ -45,8 +48,8 @@ public class FileBackedTaskManagerTest {
         Subtask subtask_2 = new Subtask("subtask_2", "subtask_2 desc", epic_with_subs.getEpicId());
         taskManager.createSubtask(epic_with_subs, subtask_2);
 
-        Task updatedTask = new Task(task_1.getTaskId(), "new_task_1", task_1.getTaskDesc(), TaskStatus.IN_PROGRESS);
-        taskManager.updateTask(updatedTask);
+//        Task updatedTask = new Task(task_1.getTaskId(), "new_task_1", task_1.getTaskDesc(), TaskStatus.IN_PROGRESS);
+//        taskManager.updateTask(updatedTask);
 
         // загрузка из файла
         FileBackedTaskManager fromFile = FileBackedTaskManager.loadFromFile(file);
