@@ -12,6 +12,11 @@ public class Subtask extends Task {
         this.epicId = epicId;
     }
 
+    public Subtask(String taskTitle, String taskDesc, Integer epicId, LocalDateTime startTime, Duration duration) {
+        super(taskTitle, taskDesc, TaskStatus.NEW, startTime, duration);
+        this.epicId = epicId;
+    }
+
     public Subtask(Integer taskId, String taskTitle, String taskDesc, TaskStatus taskStatus, Integer epicId,
                    LocalDateTime startTime, Duration duration) {
         super(taskId, taskTitle, taskDesc, taskStatus, startTime, duration);
@@ -35,7 +40,9 @@ public class Subtask extends Task {
                 ", subtaskTitle='" + getTaskTitle() + '\'' +
                 ", subtaskDesc='" + getTaskDesc() + '\'' +
                 ", subtaskStatus=" + getTaskStatus() +
-                '}';
+                ", startTime=" + startTime.format(formatter) +
+                ", duration=" + duration.toMinutes() +
+                " min}";
     }
 
 }

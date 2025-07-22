@@ -83,9 +83,13 @@ public class Epic extends Task {
     public void setEpicBeginTime(Epic epic) {
         epicSubtasks = getSubtasks(epic);
 
+        if (epicSubtasks.isEmpty()) {
+            return;
+        }
+
         LocalDateTime earliestSubtaskStartTime = null;
         for (Subtask subtask : epicSubtasks) {
-            if (subtask.getStartTime() == null || subtask.getStartTime().isBefore(earliestSubtaskStartTime)) {
+            if (subtask.getStartTime() != null) {
                 earliestSubtaskStartTime = subtask.getStartTime();
             }
         }
@@ -94,7 +98,7 @@ public class Epic extends Task {
 
         LocalDateTime latestSubtaskEndTime = null;
         for (Subtask subtask : epicSubtasks) {
-            if (subtask.getEndTime() == null || subtask.getEndTime().isAfter(latestSubtaskEndTime)){
+            if (subtask.getEndTime() != null) {
                 latestSubtaskEndTime = subtask.getEndTime();
             }
         }
@@ -113,7 +117,9 @@ public class Epic extends Task {
                 ", epicTitle='" + getTaskTitle() + '\'' +
                 ", epicDesc='" + getTaskDesc() + '\'' +
                 ", epicStatus=" + getTaskStatus() +
-                '}';
+                ", startTime=" + startTime.format(formatter) +
+                ", duration=" + duration.toMinutes() +
+                " min}";
     }
 
 }

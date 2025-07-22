@@ -1,8 +1,0 @@
-id,type,name,status,description,startTime,duration,epic
-100001,TASK,task_1,NEW,task_1 desc,2025-07-21T14:28:31.054846300,PT1H30M,
-100002,TASK,task_2,NEW,task_2 desk,,,
-200003,EPIC,new_epic_with_no_subs,NEW,desc of REAL epic with no subs,,,
-200002,EPIC,epic_with_no_subs,NEW,desc of epic with no subs,,,
-200001,EPIC,epic_with_subs,NEW,desc of epic with subs,,,
-900001,SUBTASK,subtask_1,NEW,subtask_1 desc,,,200001
-900002,SUBTASK,subtask_2,NEW,subtask_2 desc,,,200001
