@@ -25,13 +25,13 @@ public class CSVFormatter {
                               task.getTaskStatus() + "," + task.getTaskDesc() + ",";
 
         if (task.getStartTime() == null) {
-            taskToString = taskToString + "" + ",";
+            taskToString = taskToString + " " + ",";
         } else {
             taskToString += task.getStartTime().toString() + ",";
         }
 
         if (task.getDuration() == null) {
-            taskToString = taskToString + "" + ",";
+            taskToString = taskToString + " " + ",";
         } else {
             taskToString += task.getDuration().toString() + ",";
         }
@@ -40,7 +40,7 @@ public class CSVFormatter {
             taskToString = taskToString + ((Subtask) task).getEpicId();
 //        }
         } else {
-            taskToString = taskToString + "";
+            taskToString = taskToString + " ";
         }
         return taskToString;
     }
@@ -63,16 +63,16 @@ public class CSVFormatter {
         // описание
         String desc = taskParams[4];
         // старт тайм
-        if (!taskParams[5].equals("")) {
-            startTime = LocalDateTime.parse(taskParams[5]);
-        } else {
+        if (taskParams[5].equals(" ")) {
             startTime = null;
+        } else {
+            startTime = LocalDateTime.parse(taskParams[5]);
         }
         // продолжительность
-        if (!taskParams[6].equals("")) {
-            duration = Duration.parse(taskParams[6]);
-        } else {
+        if (taskParams[6].equals(" ")) {
             duration = null;
+        } else {
+            duration = Duration.parse(taskParams[6]);
         }
 
         // для сабтасков меняется алгорит и последний элемент массива должен быть распарсен в число и указан как эпик,
