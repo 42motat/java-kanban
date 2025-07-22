@@ -47,7 +47,7 @@ public class FileBackedTaskManagerTest {
 
         Subtask subtask_1 = new Subtask("subtask_1", "subtask_1 desc", epic_with_subs.getEpicId(), LocalDateTime.now().plusMinutes(180), Duration.of(60, ChronoUnit.MINUTES));
         taskManager.createSubtask(epic_with_subs, subtask_1);
-        Subtask subtask_2 = new Subtask("subtask_2", "subtask_2 desc", epic_with_subs.getEpicId());
+        Subtask subtask_2 = new Subtask("subtask_2", "subtask_2 desc", epic_with_subs.getEpicId(), LocalDateTime.now().plusMinutes(300), Duration.of(60, ChronoUnit.MINUTES));
         taskManager.createSubtask(epic_with_subs, subtask_2);
 
         // загрузка из файла
