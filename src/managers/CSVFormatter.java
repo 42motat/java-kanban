@@ -27,13 +27,13 @@ public class CSVFormatter {
         if (task.getStartTime() == null) {
             taskToString = taskToString + "" + ",";
         } else {
-            taskToString += task.getStartTime() + ",";
+            taskToString += task.getStartTime().toString() + ",";
         }
 
         if (task.getDuration() == null) {
             taskToString = taskToString + "" + ",";
         } else {
-            taskToString += task.getDuration() + ",";
+            taskToString += task.getDuration().toString() + ",";
         }
 
         if (task.getType().equals(TaskTypes.SUBTASK)) {
