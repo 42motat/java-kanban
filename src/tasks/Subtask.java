@@ -34,15 +34,29 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Subtask{" +
-                "epicId=" + epicId +
-                ", subtaskId=" + getTaskId() +
-                ", subtaskTitle='" + getTaskTitle() + '\'' +
-                ", subtaskDesc='" + getTaskDesc() + '\'' +
-                ", subtaskStatus=" + getTaskStatus() +
-                ", startTime=" + startTime.format(formatter) +
-                ", duration=" + duration.toMinutes() +
-                " min}";
+        if (startTime != null) {
+            return "Subtask{" +
+                    "epicId=" + epicId +
+                    ", subtaskId=" + getTaskId() +
+                    ", subtaskTitle='" + getTaskTitle() + '\'' +
+                    ", subtaskDesc='" + getTaskDesc() + '\'' +
+                    ", subtaskStatus=" + getTaskStatus() +
+                    ", startTime=" + startTime.format(formatter) +
+                    ", duration=" + duration.toMinutes() +
+                    " min}";
+            }
+        else {
+            return "Subtask{" +
+                    "epicId=" + epicId +
+                    ", subtaskId=" + getTaskId() +
+                    ", subtaskTitle='" + getTaskTitle() + '\'' +
+                    ", subtaskDesc='" + getTaskDesc() + '\'' +
+                    ", subtaskStatus=" + getTaskStatus() +
+//                    ", startTime=" + startTime.format(formatter) +
+//                    ", duration=" + duration.toMinutes() +
+//                    " min}";
+                    "}";
+        }
     }
 
 }

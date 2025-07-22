@@ -143,13 +143,25 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "taskId=" + taskId +
-                ", taskTitle='" + taskTitle + '\'' +
-                ", taskDesc='" + taskDesc + '\'' +
-                ", taskStatus=" + taskStatus +
-                ", startTime=" + startTime.format(formatter) +
-                ", duration=" + duration.toMinutes() +
-                " min}";
+        if (startTime != null) {
+            return "Task{" +
+                    "taskId=" + taskId +
+                    ", taskTitle='" + taskTitle + '\'' +
+                    ", taskDesc='" + taskDesc + '\'' +
+                    ", taskStatus=" + taskStatus +
+                    ", startTime=" + startTime.format(formatter) +
+                    ", duration=" + duration.toMinutes() +
+                    " min}";
+        } else {
+            return "Task{" +
+                    "taskId=" + taskId +
+                    ", taskTitle='" + taskTitle + '\'' +
+                    ", taskDesc='" + taskDesc + '\'' +
+                    ", taskStatus=" + taskStatus +
+//                    ", startTime=" + startTime.format(formatter) +
+//                    ", duration=" + duration.toMinutes() +
+//                    " min}";
+                    "}";
+        }
     }
 }

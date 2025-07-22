@@ -33,7 +33,7 @@ public class FileBackedTaskManagerTest {
         File file = File.createTempFile("some_tasks", ".csv");
         FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
 
-        Task task_1 = new Task("task_1", "task_1 desc", TaskStatus.NEW, LocalDateTime.now().plusMinutes(30), Duration.of(30, ChronoUnit.MINUTES));
+        Task task_1 = new Task("task_1", "task_1 desc", TaskStatus.NEW);
         taskManager.createTask(task_1);
 
         LocalDateTime startTask2 = LocalDateTime.of(2025, 7, 22, 12, 52);
@@ -44,19 +44,17 @@ public class FileBackedTaskManagerTest {
         taskManager.createEpic(epic_with_subs);
         Epic epic_with_no_subs = new Epic("epic_with_no_subs", "desc of epic with no subs");
         taskManager.createEpic(epic_with_no_subs);
-        Epic new_epic_with_no_subs = new Epic("new_epic_with_no_subs", "desc of REAL epic with no subs");
-        taskManager.createEpic(new_epic_with_no_subs);
 
         Subtask subtask_1 = new Subtask("subtask_1", "subtask_1 desc", epic_with_subs.getEpicId(), LocalDateTime.now().plusMinutes(180), Duration.of(60, ChronoUnit.MINUTES));
         taskManager.createSubtask(epic_with_subs, subtask_1);
-        Subtask subtask_2 = new Subtask("subtask_2", "subtask_2 desc", epic_with_subs.getEpicId(), LocalDateTime.now().plusMinutes(240), Duration.of(60, ChronoUnit.MINUTES));
+        Subtask subtask_2 = new Subtask("subtask_2", "subtask_2 desc", epic_with_subs.getEpicId());
         taskManager.createSubtask(epic_with_subs, subtask_2);
 
         // загрузка из файла
         FileBackedTaskManager fromFile = FileBackedTaskManager.loadFromFile(file);
 
         assertEquals(2, fromFile.getAllTasks().size());
-        assertEquals(3, fromFile.getAllEpics().size());
+        assertEquals(2, fromFile.getAllEpics().size());
         assertEquals(2, fromFile.getAllSubtasks().size());
     }
 

@@ -21,7 +21,7 @@ public class Epic extends Task {
 
     // для использования в fromString
     public Epic(Integer taskId, String taskTitle, String taskDesc, TaskStatus taskStatus, LocalDateTime startTime, Duration duration) {
-        super(taskId, taskTitle, taskDesc, taskStatus, startTime, duration);
+        super(taskId, taskTitle, taskDesc, taskStatus, null, null);
         epicSubtasks = new ArrayList<>();
     }
 
@@ -117,9 +117,10 @@ public class Epic extends Task {
                 ", epicTitle='" + getTaskTitle() + '\'' +
                 ", epicDesc='" + getTaskDesc() + '\'' +
                 ", epicStatus=" + getTaskStatus() +
-                ", startTime=" + startTime.format(formatter) +
-                ", duration=" + duration.toMinutes() +
-                " min}";
+//                ", startTime=" + startTime.format(formatter) +
+//                ", duration=" + duration.toMinutes() +
+//                " min}";
+                "}";
     }
 
 }
