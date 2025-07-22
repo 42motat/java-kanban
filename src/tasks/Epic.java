@@ -3,9 +3,11 @@ package tasks;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Optional;
 
 public class Epic extends Task {
-    private ArrayList<Subtask> epicSubtasks;
+    protected ArrayList<Subtask> epicSubtasks;
 
     // для создания epic
     public Epic(String taskTitle, String taskDesc) {
@@ -80,6 +82,7 @@ public class Epic extends Task {
         return getTaskId();
     }
 
+
     public void setEpicBeginTime(Epic epic) {
         epicSubtasks = getSubtasks(epic);
 
@@ -90,7 +93,9 @@ public class Epic extends Task {
         LocalDateTime earliestSubtaskStartTime = null;
         for (Subtask subtask : epicSubtasks) {
             if (subtask.getStartTime() != null) {
-                earliestSubtaskStartTime = subtask.getStartTime();
+                if (earliestSubtaskStartTime == null || subtask.getStartTime().isBefore(earliestSubtaskStartTime)) {
+                    earliestSubtaskStartTime = subtask.getStartTime();
+                }
             }
         }
 
@@ -99,15 +104,17 @@ public class Epic extends Task {
         LocalDateTime latestSubtaskEndTime = null;
         for (Subtask subtask : epicSubtasks) {
             if (subtask.getEndTime() != null) {
-                latestSubtaskEndTime = subtask.getEndTime();
+                if (latestSubtaskEndTime == null || subtask.getEndTime().isAfter(latestSubtaskEndTime)) {
+                    latestSubtaskEndTime = subtask.getEndTime();
+                }
             }
         }
 
         Duration epicDuration = Duration.between(earliestSubtaskStartTime, latestSubtaskEndTime);
 
         setDuration(epicDuration);
-
     }
+
 
     @Override
     public String toString() {
