@@ -44,8 +44,7 @@ public class Subtask extends Task {
                     ", startTime=" + startTime.format(formatter) +
                     ", duration=" + duration.toMinutes() +
                     " min}";
-            }
-        else {
+        } else {
             return "Subtask{" +
                     "epicId=" + epicId +
                     ", subtaskId=" + getTaskId() +
