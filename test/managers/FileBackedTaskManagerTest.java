@@ -50,6 +50,10 @@ public class FileBackedTaskManagerTest {
         Subtask subtask_2 = new Subtask("subtask_2", "subtask_2 desc", epic_with_subs.getEpicId(), LocalDateTime.now().plusMinutes(300), Duration.of(60, ChronoUnit.MINUTES));
         taskManager.createSubtask(epic_with_subs, subtask_2);
 
+        for (Task task : taskManager.getPrioritizedTasks()) {
+            System.out.println(task);
+        }
+
         // загрузка из файла
 //        FileBackedTaskManager fromFile = FileBackedTaskManager.loadFromFile(file);
 //

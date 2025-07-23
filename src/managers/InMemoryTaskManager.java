@@ -63,11 +63,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public void addToPrioritizedList(Task task) {
-        if (task.getStartTime() != null) {
-            prioritizedTasks.add(task);
-        }
-        if (isTimeConflicted(prioritizedTasks, task)) {
-            throw new ManagerSaveException("Задача не будет сохранена, поскольку пересекается с имеющейся в списке.");
+        if (task.getStartTime() != null && task.getDuration() != null) {
+            if (isTimeConflicted(prioritizedTasks, task)) {
+                throw new ManagerSaveException("Задача не будет сохранена, поскольку пересекается с имеющейся в списке.");
+            } else {
+                prioritizedTasks.add(task);
+            }
         }
     }
 
@@ -135,6 +136,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateEpic(Epic epic) {
         epics.put(epic.getTaskId(), epic);
         epic.calculateEpicStatus(epic);
+        epic.calculateEpicTime(epic);
     }
 
     @Override
@@ -172,8 +174,8 @@ public class InMemoryTaskManager implements TaskManager {
         subtask.setTaskId(getNextSubtaskId());
         subtasks.put(subtask.getTaskId(), subtask);
         addToPrioritizedList(subtask);
-        epic.setEpicBeginTime(epic);
         epic.addSubtask(subtask);
+        epic.calculateEpicTime(epic);
         epic.calculateEpicStatus(epic);
     }
 
@@ -181,9 +183,9 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateSubtask(Subtask subtask, Subtask subtaskToRemove, Epic epic) {
         epic.replaceSubtask(subtask, subtaskToRemove);
         subtasks.remove(subtaskToRemove.getTaskId());
-        subtasks.put(subtask.getTaskId(), subtask);
         addToPrioritizedList(subtask);
-        epic.setEpicBeginTime(epic);
+        subtasks.put(subtask.getTaskId(), subtask);
+        epic.calculateEpicTime(epic);
         epic.calculateEpicStatus(epic);
     }
 
@@ -194,6 +196,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtasks.remove(subtaskId);
         removeHistory(subtaskId);
         epic.deleteSubtask(subtaskToDelete);
+        epic.calculateEpicTime(epic);
         epic.calculateEpicStatus(epic);
     }
 

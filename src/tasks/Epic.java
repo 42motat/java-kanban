@@ -3,11 +3,13 @@ package tasks;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 //import java.util.Comparator;
 //import java.util.Optional;
 
 public class Epic extends Task {
     protected ArrayList<Subtask> epicSubtasks;
+    protected LocalDateTime endTime;
 
     // для создания epic
     public Epic(String taskTitle, String taskDesc) {
@@ -83,38 +85,57 @@ public class Epic extends Task {
     }
 
 
-    public void setEpicBeginTime(Epic epic) {
+    // изменено имя метода на более подходящее
+    public void calculateEpicTime(Epic epic) {
         epicSubtasks = getSubtasks(epic);
 
         if (epicSubtasks.isEmpty()) {
             return;
         }
 
-        LocalDateTime earliestSubtaskStartTime = null;
-        for (Subtask subtask : epicSubtasks) {
-            if (subtask.getStartTime() != null) {
-                if (earliestSubtaskStartTime == null || subtask.getStartTime().isBefore(earliestSubtaskStartTime)) {
-                    earliestSubtaskStartTime = subtask.getStartTime();
-                }
-            }
-        }
+        // применение стрима для получения даты начала эпика (с небольшой помощью от yandexGPT :))
+        LocalDateTime earliestSubtaskStartTime = epicSubtasks.stream()
+                .filter(subtask -> subtask.getStartTime() != null)
+                .min(Comparator.comparing(Subtask::getStartTime))
+                .map(Subtask::getStartTime)
+                .orElse(null);
 
-        setStartTime(earliestSubtaskStartTime);
+        epic.setStartTime(earliestSubtaskStartTime);
 
-        LocalDateTime latestSubtaskEndTime = null;
-        for (Subtask subtask : epicSubtasks) {
-            if (subtask.getEndTime() != null) {
-                if (latestSubtaskEndTime == null || subtask.getEndTime().isAfter(latestSubtaskEndTime)) {
-                    latestSubtaskEndTime = subtask.getEndTime();
-                }
-            }
-        }
+        endTime = epicSubtasks.stream()
+                .filter(subtask1 -> subtask1.getStartTime() != null)
+                .max(Comparator.comparing(Subtask::getStartTime))
+                .map(Subtask::getStartTime)
+                .orElse(null);
 
-        Duration epicDuration = Duration.between(earliestSubtaskStartTime, latestSubtaskEndTime);
+        // подсчёт длительности эпика на основе сабтасков, которые имеют стартовое время и продолжительность
+        Duration epicDuration = epicSubtasks.stream()
+                .filter(subtask -> subtask.getStartTime() != null && subtask.getDuration() != null)
+                .reduce(Duration.ZERO, (duration, subtask) -> duration.plus(subtask.getDuration()), Duration::plus);
 
-        setDuration(epicDuration);
+        epic.setDuration(epicDuration);
+
+        // объединённый цикл для поиска времени начала и конца эпика
+//        LocalDateTime earliestSubtaskStartTime = null;
+//        LocalDateTime latestSubtaskEndTime = null;
+//
+//        for (Subtask subtask : epicSubtasks) {
+//            if (subtask.getStartTime() != null) {
+//                if (earliestSubtaskStartTime == null || subtask.getStartTime().isBefore(earliestSubtaskStartTime)) {
+//                    earliestSubtaskStartTime = subtask.getStartTime();
+//                }
+//            }
+//
+//            if (subtask.getEndTime() != null) {
+//                if (latestSubtaskEndTime == null || subtask.getEndTime().isAfter(latestSubtaskEndTime)) {
+//                    latestSubtaskEndTime = subtask.getEndTime();
+//                }
+//            }
+//        }
+//
+//        setStartTime(earliestSubtaskStartTime);
+//        endTime = latestSubtaskEndTime;
     }
-
 
     @Override
     public String toString() {
