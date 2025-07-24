@@ -1,5 +1,8 @@
 package tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
@@ -7,26 +10,51 @@ public class Task {
     private String taskTitle;
     private String taskDesc;
     private TaskStatus taskStatus;
+    // поля для времени
+    protected LocalDateTime startTime;
+    protected Duration duration;
 
-    // для создания task и subtask
+    protected DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
+
+
+    // для создания task без времени и продолжительности
     public Task(String taskTitle, String taskDesc, TaskStatus taskStatus) {
         this.taskTitle = taskTitle;
         this.taskDesc = taskDesc;
         this.taskStatus = taskStatus;
     }
 
-    // для создания epic
-    public Task(String taskTitle, String taskDesc) {
-        this.taskTitle = taskTitle;
-        this.taskDesc = taskDesc;
-    }
-
-    // для обновления task
+    // для обновления task без времени и продолжительности
     public Task(Integer taskId, String taskTitle, String taskDesc, TaskStatus taskStatus) {
         this.taskId = taskId;
         this.taskTitle = taskTitle;
         this.taskDesc = taskDesc;
         this.taskStatus = taskStatus;
+    }
+
+    // для создания task и subtask
+    public Task(String taskTitle, String taskDesc, TaskStatus taskStatus, LocalDateTime startTime, Duration duration) {
+        this.taskTitle = taskTitle;
+        this.taskDesc = taskDesc;
+        this.taskStatus = taskStatus;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    // для обновления task
+    public Task(Integer taskId, String taskTitle, String taskDesc, TaskStatus taskStatus, LocalDateTime startTime, Duration duration) {
+        this.taskId = taskId;
+        this.taskTitle = taskTitle;
+        this.taskDesc = taskDesc;
+        this.taskStatus = taskStatus;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    // для создания epic
+    public Task(String taskTitle, String taskDesc) {
+        this.taskTitle = taskTitle;
+        this.taskDesc = taskDesc;
     }
 
     // для обновления epic
@@ -72,6 +100,30 @@ public class Task {
         this.taskStatus = taskStatus;
     }
 
+    public LocalDateTime getEndTime() {
+        if (duration != null) {
+            return startTime.plus(duration);
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -91,11 +143,25 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "taskId=" + taskId +
-                ", taskTitle='" + taskTitle + '\'' +
-                ", taskDesc='" + taskDesc + '\'' +
-                ", taskStatus=" + taskStatus +
-                '}';
+        if (startTime != null) {
+            return "Task{" +
+                    "taskId=" + taskId +
+                    ", taskTitle='" + taskTitle + '\'' +
+                    ", taskDesc='" + taskDesc + '\'' +
+                    ", taskStatus=" + taskStatus +
+                    ", startTime=" + startTime.format(formatter) +
+                    ", duration=" + duration.toMinutes() +
+                    " min}";
+        } else {
+            return "Task{" +
+                    "taskId=" + taskId +
+                    ", taskTitle='" + taskTitle + '\'' +
+                    ", taskDesc='" + taskDesc + '\'' +
+                    ", taskStatus=" + taskStatus +
+//                    ", startTime=" + startTime.format(formatter) +
+//                    ", duration=" + duration.toMinutes() +
+//                    " min}";
+                    "}";
+        }
     }
 }

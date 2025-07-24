@@ -1,9 +1,3 @@
-/* Александру Ф.
- * Добрый день, Александр!
- * Спасибо за обратную связь по заданию.
- * Постарался исправить замечания и сделать небольшой рефакторинг.
- */
-
 package managers;
 
 import exceptions.ManagerSaveException;
@@ -79,7 +73,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 writer.write(CSVFormatter.toString(epic));
                 writer.newLine();
             }
-            // 2. сабтаски
+            // 4. сабтаски
             for (Subtask subtask : getAllSubtasks()) {
                 writer.write(CSVFormatter.toString(subtask));
                 writer.newLine();
