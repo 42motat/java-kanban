@@ -1,9 +1,4 @@
 
-/* Александру Ф.
- * Добрый день, Александр!
- * Заранее благодарю за код-ревью.
- */
-
 package managers;
 
 import exceptions.ManagerSaveException;

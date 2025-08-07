@@ -9,7 +9,6 @@ import web.HttpTaskServer;
 import java.io.IOException;
 
 public class PrioritizedHttpHandler extends BaseHttpHandler implements HttpHandler {
-    protected TaskManager taskManager;
     Gson gson = HttpTaskServer.getGson();
 
     public PrioritizedHttpHandler(TaskManager taskManager) {
@@ -21,11 +20,14 @@ public class PrioritizedHttpHandler extends BaseHttpHandler implements HttpHandl
         String requestMethod = exchange.getRequestMethod();
         switch (requestMethod) {
             case "GET":
-                sendText(exchange, gson.toJson(taskManager.getPrioritizedTasks()));
+                String prioritizedTasks = gson.toJson(taskManager.getPrioritizedTasks());
+                sendText(exchange, gson.toJson(prioritizedTasks));
                 break;
             case "POST", "DELETE":
                 sendBadRequest(exchange, "Метод не поддерживается");
                 break;
+            default:
+                sendBadRequest(exchange, "Поддерживаемые методы: GET");
         }
     }
 }

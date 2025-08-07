@@ -16,8 +16,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TaskHttpHandlerTest {
     TaskManager taskManager = new InMemoryTaskManager();
@@ -27,6 +29,9 @@ public class TaskHttpHandlerTest {
 
     @BeforeEach
     public void startServer() throws IOException {
+        taskManager.deleteAllTasks();
+        taskManager.deleteAllEpics();
+        taskManager.deleteAllSubtasks();
         HttpTaskServer.start();
     }
 
@@ -37,10 +42,8 @@ public class TaskHttpHandlerTest {
 
     @Test
     public void shouldAddTaskTest() throws IOException, InterruptedException {
-//        Task task_1 = new Task(100001, "task_1", "task_1 desc", TaskStatus.NEW, LocalDateTime.now(), Duration.ofMinutes(30));
-        Task task_1 = new Task("task_1", "task_1 desc", TaskStatus.NEW);
         Task task_2 = new Task("task_2", "task_2 desc", TaskStatus.NEW, LocalDateTime.of(2025, 8, 7, 11, 24), Duration.ofMinutes(30));
-        String taskToJson = gson.toJson(task_1);
+        String taskToJson = gson.toJson(task_2);
 
         URI uri = URI.create("http://localhost:8080/tasks");
         HttpRequest request = HttpRequest.newBuilder()
@@ -50,17 +53,86 @@ public class TaskHttpHandlerTest {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println(request);
-        System.out.println(response);
         assertEquals(201, response.statusCode());
+
+        URI uri2 = URI.create("http://localhost:8080/tasks");
+        HttpRequest request2 = HttpRequest.newBuilder()
+                .uri(uri2)
+                .header("Content-Type", "application/json")
+                .GET()
+                .build();
+
+        HttpResponse<String> response2 = client.send(request2, HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response2.statusCode());
+
+        List<Task> tasksFromManager = taskManager.getAllTasks();
+
+        assertNotNull(tasksFromManager, "Задачи не возвращаются");
+        assertEquals(1, tasksFromManager.size(), "Некорректное количество задач");
+    }
+
+    @Test
+    public void shouldUpdateTaskTest() throws IOException, InterruptedException {
+        Task task_2 = new Task("task_2", "task_2 desc", TaskStatus.NEW, LocalDateTime.of(2025, 8, 7, 11, 24), Duration.ofMinutes(30));
+        String taskToJson = gson.toJson(task_2);
+
+        URI uri = URI.create("http://localhost:8080/tasks");
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(uri)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(taskToJson))
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        // update
+        Task updatedTask = new Task(100002, "task_2", "task_2 desc", TaskStatus.NEW, LocalDateTime.of(2025, 8, 7, 11, 24), Duration.ofMinutes(30));
+        String updatedTaskToJson = gson.toJson(updatedTask);
+
+        URI uri2 = URI.create("http://localhost:8080/tasks/100002");
+        HttpRequest request2 = HttpRequest.newBuilder()
+                .uri(uri2)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(updatedTaskToJson))
+                .build();
+        HttpResponse<String> response2 = client.send(request2, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(201, response2.statusCode());
+
+        List<Task> tasksFromManager = taskManager.getAllTasks();
+        System.out.println(tasksFromManager);
 
     }
 
     @Test
     public void shouldGetTaskTest() throws IOException, InterruptedException {
-        Task task_1 = new Task("task_1", "task_1 desc", TaskStatus.NEW, LocalDateTime.of(2025, 8, 7, 11, 24), Duration.ofMinutes(30));
-        String taskToJson = gson.toJson(task_1);
+        Task task_2 = new Task(100003, "task_3", "task_3 desc", TaskStatus.NEW, LocalDateTime.of(2026, 8, 7, 11, 24), Duration.ofMinutes(30));
+        String taskToJson = gson.toJson(task_2);
 
+        URI uri = URI.create("http://localhost:8080/tasks");
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(uri)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(taskToJson))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(201, response.statusCode());
+
+        URI uri2 = URI.create("http://localhost:8080/tasks/100003");
+        HttpRequest request2 = HttpRequest.newBuilder()
+                .uri(uri2)
+                .header("Content-Type", "application/json")
+                .GET()
+                .build();
+
+        HttpResponse<String> response2 = client.send(request2, HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response2.statusCode());
+
+        List<Task> prioritizedList = taskManager.getPrioritizedTasks();
+        assertEquals(1, prioritizedList.size(), "Некорректное количество задач");
+
+        List<Task> history = taskManager.getHistory();
+        assertEquals(1, history.size(), "Некорректное количество задач");
 
     }
 

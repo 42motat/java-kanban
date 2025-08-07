@@ -2,7 +2,6 @@ package tasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
@@ -14,7 +13,7 @@ public class Task {
     protected LocalDateTime startTime;
     protected Duration duration;
 
-    public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
+//    public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
 
 
     // для создания task без времени и продолжительности
@@ -149,7 +148,7 @@ public class Task {
                     ", taskTitle='" + taskTitle + '\'' +
                     ", taskDesc='" + taskDesc + '\'' +
                     ", taskStatus=" + taskStatus +
-                    ", startTime=" + startTime.format(formatter) +
+                    ", startTime=" + startTime /*.format(formatter)*/ +
                     ", duration=" + duration.toMinutes() +
                     "}";
         } else {

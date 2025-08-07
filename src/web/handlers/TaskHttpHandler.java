@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import exceptions.TaskNotFoundException;
+import exceptions.TimeConflicted;
 import managers.TaskManager;
 import tasks.Task;
 import web.HttpTaskServer;
@@ -37,8 +38,6 @@ public class TaskHttpHandler extends BaseHttpHandler implements HttpHandler {
                 case "GET":
                     if (taskId == null) {
                         ArrayList<Task> taskList = taskManager.getAllTasks();
-//                        System.out.println("Вот здесь");
-//                        System.out.println(gson.toJson(taskList) + "ошибка");
                         String jsonList = gson.toJson(taskList);
                         sendText(exchange, jsonList);
                     } else if (taskManager.getTaskById(Integer.parseInt(taskId)) == null) {
@@ -51,41 +50,76 @@ public class TaskHttpHandler extends BaseHttpHandler implements HttpHandler {
 
                 case "POST":
                     InputStream inputStream = exchange.getRequestBody();
-                    String taskFromJson = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                    System.out.println("Здесь вот");
-                    System.out.println(taskFromJson);
-                    Task task = gson.fromJson(taskFromJson, Task.class);
-                    System.out.println(task);
-
+                    String strTaskFromJson = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                    // если в запросе не передаётся айди, то это создание нового task
                     if (taskId == null) {
-                        System.out.println("id null");
-                        taskManager.createTask(task);
-                        sendCreatedStatus(exchange);
-                    } else if (taskManager.getTaskById(Integer.parseInt(taskId)) == null) {
-                        System.out.println("id не найден");
-                        sendNotFound(exchange, "В списке задач нет задачи с ID " + taskId);
-                    } else {
-                        System.out.println("id updated");
-                        taskManager.updateTask(task);
-                        sendCreatedStatus(exchange);
-                    }
-                    break;
-
-                case "DELETE":
-                    if (taskId == null) {
-                        sendText(exchange, "Необходимо указать ID задачи для удаления");
+                        try {
+                            Task taskFromJson = gson.fromJson(strTaskFromJson, Task.class);
+                            Task task = getTaskToCreate(taskFromJson);
+                            taskManager.createTask(task);
+                            sendCreatedStatus(exchange);
+                        } catch (TimeConflicted e) {
+                            sendHasTimeConflict(exchange, "Обнаружено пересечение времени с существующей задачей");
+                        }
                     } else if (taskManager.getTaskById(Integer.parseInt(taskId)) == null) {
                         sendNotFound(exchange, "В списке задач нет задачи с ID " + taskId);
                     } else {
-                        taskManager.deleteTaskById(Integer.parseInt(taskId));
-                        sendText(exchange, "Задача с ID " + taskId + " удалена");
+                        try {
+                            Task taskFromJson = gson.fromJson(strTaskFromJson, Task.class);
+                            Task task = getTaskToUpdate(taskFromJson);
+                            taskManager.updateTask(task);
+                            sendCreatedStatus(exchange);
+                        } catch (TimeConflicted e) {
+                            sendHasTimeConflict(exchange, "Обнаружено пересечение времени с существующей задачей");
+                        }
                     }
                     break;
+
+            case "DELETE":
+                if (taskId == null) {
+                    sendBadRequest(exchange, "Необходимо указать ID задачи для удаления");
+                } else if (taskManager.getTaskById(Integer.parseInt(taskId)) == null) {
+                    sendNotFound(exchange, "В списке задач нет задачи с ID " + taskId);
+                } else {
+                    taskManager.deleteTaskById(Integer.parseInt(taskId));
+                    sendText(exchange, "Задача с ID " + taskId + " удалена");
+                }
+                break;
+            default:
+                sendText(exchange, "Неверный запрос");
             }
         } catch (TaskNotFoundException e) {
             sendNotFound(exchange, "Задача не найдена");
         } catch (RuntimeException e) {
             sendBadRequest(exchange, "Произошла ошибка");
         }
+    }
+
+    private static Task getTaskToUpdate(Task taskFromJson) {
+        Task task;
+        if (taskFromJson.getStartTime() != null && taskFromJson.getDuration() != null) {
+            task = new Task(taskFromJson.getTaskId(), taskFromJson.getTaskTitle(),
+                    taskFromJson.getTaskDesc(), taskFromJson.getTaskStatus(),
+                    taskFromJson.getStartTime(), taskFromJson.getDuration());
+        } else {
+            task = new Task(taskFromJson.getTaskId(), taskFromJson.getTaskTitle(),
+                    taskFromJson.getTaskDesc(), taskFromJson.getTaskStatus(),
+                    null, null);
+        }
+        return task;
+    }
+
+    private static Task getTaskToCreate(Task taskFromJson) {
+        Task task;
+        if (taskFromJson.getStartTime() != null && taskFromJson.getDuration() != null) {
+            task = new Task(taskFromJson.getTaskTitle(),
+                    taskFromJson.getTaskDesc(), taskFromJson.getTaskStatus(),
+                    taskFromJson.getStartTime(), taskFromJson.getDuration());
+        } else {
+            task = new Task(taskFromJson.getTaskTitle(),
+                    taskFromJson.getTaskDesc(), taskFromJson.getTaskStatus(),
+                    null, null);
+        }
+        return task;
     }
 }

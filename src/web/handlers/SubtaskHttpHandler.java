@@ -2,9 +2,8 @@ package web.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import exceptions.TaskNotFoundException;
-import tasks.Epic;
+import exceptions.TimeConflicted;
 import tasks.Subtask;
-import tasks.Task;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,24 +52,36 @@ public class SubtaskHttpHandler extends BaseHttpHandler implements HttpHandler {
 
                 case "POST":
                     InputStream inputStream = exchange.getRequestBody();
-                    String subtaskFromJson = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                    Subtask subtask = gson.fromJson(subtaskFromJson, Subtask.class);
-                    int epicId = subtask.getEpicId();
+                    String strSubtaskFromJson = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
 
                     if (subtaskId == null) {
-                        taskManager.createSubtask(taskManager.getEpicById(epicId), subtask);
-                        sendCreatedStatus(exchange);
+                        try {
+                            Subtask subtaskFromJson = gson.fromJson(strSubtaskFromJson, Subtask.class);
+                            int epicId = subtaskFromJson.getEpicId();
+                            Subtask subtask = getSubtaskToCreate(epicId, subtaskFromJson);
+                            taskManager.createSubtask(taskManager.getEpicById(epicId), subtask);
+                            sendCreatedStatus(exchange);
+                        } catch (TimeConflicted e) {
+                            sendHasTimeConflict(exchange, "Обнаружено пересечение времени с существующей задачей");
+                        }
                     } else if (taskManager.getTaskById(Integer.parseInt(subtaskId)) == null) {
-                        sendNotFound(exchange, "В списке подзадач нет подзадачи с ID " + subtaskId);
+                            sendNotFound(exchange, "В списке подзадач нет подзадачи с ID " + subtaskId);
                     } else {
-                        taskManager.updateSubtask(subtask, subtask, taskManager.getEpicById(epicId));
-                        sendCreatedStatus(exchange);
+                        try {
+                            Subtask subtaskFromJson = gson.fromJson(strSubtaskFromJson, Subtask.class);
+                            int epicId = subtaskFromJson.getEpicId();
+                            Subtask subtask = getSubtaskToUpdate(epicId, subtaskFromJson);
+                            taskManager.updateSubtask(subtask, subtask, taskManager.getEpicById(epicId));
+                            sendCreatedStatus(exchange);
+                        } catch (TimeConflicted e) {
+                            sendHasTimeConflict(exchange, "Обнаружено пересечение времени с существующей задачей");
+                        }
                     }
                     break;
 
                 case "DELETE":
                     if (subtaskId == null) {
-                        sendText(exchange, "Необходимо указать ID подзадачи для удаления");
+                        sendBadRequest(exchange, "Необходимо указать ID подзадачи для удаления");
                     } else if (taskManager.getTaskById(Integer.parseInt(subtaskId)) == null) {
                         sendNotFound(exchange, "В списке подзадач нет задачи с ID " + subtaskId);
                     } else {
@@ -84,6 +95,31 @@ public class SubtaskHttpHandler extends BaseHttpHandler implements HttpHandler {
         } catch (RuntimeException e) {
             sendBadRequest(exchange, "Произошла ошибка");
         }
+    }
+
+    private static Subtask getSubtaskToUpdate(int epicId, Subtask subtaskFromJson) {
+        Subtask subtask;
+        if (subtaskFromJson.getStartTime() != null && subtaskFromJson.getDuration() != null) {
+            subtask = new Subtask(subtaskFromJson.getTaskId(), subtaskFromJson.getTaskTitle(),
+                                  subtaskFromJson.getTaskDesc(), subtaskFromJson.getTaskStatus(),
+                                   epicId, subtaskFromJson.getStartTime(), subtaskFromJson.getDuration());
+        } else {
+            subtask = new Subtask(subtaskFromJson.getTaskId(), subtaskFromJson.getTaskTitle(),
+                    subtaskFromJson.getTaskDesc(), subtaskFromJson.getTaskStatus(), epicId, null, null);
+        }
+        return subtask;
+    }
+
+    private static Subtask getSubtaskToCreate(int epicId, Subtask subtaskFromJson) {
+        Subtask subtask;
+        if (subtaskFromJson.getStartTime() != null && subtaskFromJson.getDuration() != null) {
+            subtask = new Subtask(subtaskFromJson.getTaskTitle(), subtaskFromJson.getTaskDesc(), epicId,
+                                  subtaskFromJson.getStartTime(), subtaskFromJson.getDuration());
+        } else {
+            subtask = new Subtask(subtaskFromJson.getTaskTitle(), subtaskFromJson.getTaskDesc(), epicId,
+                                 null, null);
+        }
+        return subtask;
     }
 }
 

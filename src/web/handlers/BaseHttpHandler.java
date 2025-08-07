@@ -1,6 +1,5 @@
 package web.handlers;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import managers.TaskManager;
 
@@ -44,8 +43,11 @@ public class BaseHttpHandler {
         exchange.close();
     }
 
-    protected void sendHasTimeConflict(HttpExchange exchange) throws IOException {
+    protected void sendHasTimeConflict(HttpExchange exchange, String text) throws IOException {
+        byte[] resp = text.getBytes(StandardCharsets.UTF_8);
+        exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
         exchange.sendResponseHeaders(406, 0);
+        exchange.getResponseBody().write(resp);
         exchange.close();
     }
 }
