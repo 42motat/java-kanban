@@ -53,6 +53,8 @@ public interface TaskManager {
 
     List<Task> getHistory();
 
+    List<Task> getPrioritizedTasks();
+
     /* МЕГА ЧИСТКА */
     void clearAllInstances();
 }

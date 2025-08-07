@@ -14,7 +14,7 @@ public class Task {
     protected LocalDateTime startTime;
     protected Duration duration;
 
-    protected DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
+    public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
 
 
     // для создания task без времени и продолжительности
@@ -151,7 +151,7 @@ public class Task {
                     ", taskStatus=" + taskStatus +
                     ", startTime=" + startTime.format(formatter) +
                     ", duration=" + duration.toMinutes() +
-                    " min}";
+                    "}";
         } else {
             return "Task{" +
                     "taskId=" + taskId +

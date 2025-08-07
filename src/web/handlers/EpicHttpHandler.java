@@ -1,0 +1,87 @@
+package web.handlers;
+
+import com.google.gson.Gson;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import managers.TaskManager;
+import tasks.Epic;
+import tasks.Subtask;
+import web.HttpTaskServer;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+
+public class EpicHttpHandler extends BaseHttpHandler implements HttpHandler {
+
+    public EpicHttpHandler(TaskManager taskManager) {
+        super(taskManager);
+    }
+
+    Gson gson = HttpTaskServer.getGson();
+
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
+        String requestMethod = exchange.getRequestMethod();
+        String path = exchange.getRequestURI().getPath();
+        String[] pathParts = path.split("/");
+        String epicId = null;
+        String subtasks = null;
+
+        if (pathParts.length == 3) {
+            epicId = pathParts[2];
+        } else if (pathParts.length == 4) {
+            epicId = pathParts[2];
+            subtasks = pathParts[3];
+        }
+
+        switch (requestMethod) {
+            case "GET":
+                if (epicId == null) {
+                    ArrayList<Epic> epicList = taskManager.getAllEpics();
+                    String jsonList = gson.toJson(epicList);
+                    sendText(exchange, jsonList);
+                } else if (epicId != null && subtasks == null) {
+                    if (taskManager.getEpicById(Integer.parseInt(pathParts[2])) == null) {
+                        sendNotFound(exchange, "В списке задач нет задачи с ID " + epicId);
+                    } else {
+                        Epic epic = taskManager.getEpicById(Integer.parseInt(pathParts[2]));
+                        sendText(exchange, gson.toJson(epic));
+                    }
+                } else if (epicId != null && subtasks != null) {
+                    Epic epic = taskManager.getEpicById(Integer.parseInt(pathParts[2]));
+                    ArrayList<Subtask>  subtaskList = taskManager.getSubtasksByEpicId(Integer.parseInt(pathParts[2]));
+                    String jsonList = gson.toJson(subtaskList);
+                    sendText(exchange, jsonList);
+                }
+                break;
+            case "POST":
+                InputStream inputStream = exchange.getRequestBody();
+                String epicFromJson = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                Epic epic = gson.fromJson(epicFromJson, Epic.class);
+                System.out.println(epic);
+
+                if (epicId == null) {
+                    taskManager.createTask(epic);
+                    sendCreatedStatus(exchange);
+                } else if (taskManager.getTaskById(Integer.parseInt(epicId)) == null) {
+                    sendNotFound(exchange, "В списке задач нет эпика с ID " + epicId);
+                } else {
+                    taskManager.updateTask(epic);
+                    sendCreatedStatus(exchange);
+                }
+                break;
+            case "DELETE":
+                if (epicId == null) {
+                    sendText(exchange, "Необходимо указать ID задачи для удаления");
+                } else if (taskManager.getTaskById(Integer.parseInt(epicId)) == null) {
+                    sendNotFound(exchange, "В списке задач нет задачи с ID " + epicId);
+                } else {
+                    taskManager.deleteTaskById(Integer.parseInt(epicId));
+                    sendText(exchange, "Задача с ID " + epicId + " удалена");
+                }
+                break;
+        }
+    }
+}
