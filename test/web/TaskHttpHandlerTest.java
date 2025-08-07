@@ -69,6 +69,8 @@ public class TaskHttpHandlerTest {
 
         assertNotNull(tasksFromManager, "Задачи не возвращаются");
         assertEquals(1, tasksFromManager.size(), "Некорректное количество задач");
+
+        System.out.println(taskManager.getAllTasks());
     }
 
     @Test
@@ -96,17 +98,16 @@ public class TaskHttpHandlerTest {
                 .build();
         HttpResponse<String> response2 = client.send(request2, HttpResponse.BodyHandlers.ofString());
 
+        System.out.println(taskManager.getAllTasks());
         assertEquals(201, response2.statusCode());
 
-        List<Task> tasksFromManager = taskManager.getAllTasks();
-        System.out.println(tasksFromManager);
 
     }
 
     @Test
     public void shouldGetTaskTest() throws IOException, InterruptedException {
-        Task task_2 = new Task(100001, "task_3", "task_3 desc", TaskStatus.NEW, LocalDateTime.of(2026, 8, 7, 11, 24), Duration.ofMinutes(30));
-        String taskToJson = gson.toJson(task_2);
+        Task task_3 = new Task("task_3", "task_3 desc", TaskStatus.NEW, LocalDateTime.of(2026, 8, 7, 11, 24), Duration.ofMinutes(30));
+        String taskToJson = gson.toJson(task_3);
 
         URI uri = URI.create("http://localhost:8080/tasks");
         HttpRequest request = HttpRequest.newBuilder()
