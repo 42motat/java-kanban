@@ -85,10 +85,10 @@ public class TaskHttpHandlerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         // update
-        Task updatedTask = new Task(100002, "task_2", "task_2 desc", TaskStatus.NEW, LocalDateTime.of(2025, 8, 7, 11, 24), Duration.ofMinutes(30));
+        Task updatedTask = new Task(100001, "task_2", "task_2 desc", TaskStatus.NEW, LocalDateTime.of(2025, 8, 7, 11, 24), Duration.ofMinutes(30));
         String updatedTaskToJson = gson.toJson(updatedTask);
 
-        URI uri2 = URI.create("http://localhost:8080/tasks/100002");
+        URI uri2 = URI.create("http://localhost:8080/tasks/100001");
         HttpRequest request2 = HttpRequest.newBuilder()
                 .uri(uri2)
                 .header("Content-Type", "application/json")
@@ -105,7 +105,7 @@ public class TaskHttpHandlerTest {
 
     @Test
     public void shouldGetTaskTest() throws IOException, InterruptedException {
-        Task task_2 = new Task(100003, "task_3", "task_3 desc", TaskStatus.NEW, LocalDateTime.of(2026, 8, 7, 11, 24), Duration.ofMinutes(30));
+        Task task_2 = new Task(100001, "task_3", "task_3 desc", TaskStatus.NEW, LocalDateTime.of(2026, 8, 7, 11, 24), Duration.ofMinutes(30));
         String taskToJson = gson.toJson(task_2);
 
         URI uri = URI.create("http://localhost:8080/tasks");
@@ -118,7 +118,7 @@ public class TaskHttpHandlerTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(201, response.statusCode());
 
-        URI uri2 = URI.create("http://localhost:8080/tasks/100003");
+        URI uri2 = URI.create("http://localhost:8080/tasks/100001");
         HttpRequest request2 = HttpRequest.newBuilder()
                 .uri(uri2)
                 .header("Content-Type", "application/json")
