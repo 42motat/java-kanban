@@ -4,12 +4,11 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import managers.TaskManager;
-import web.HttpTaskServer;
 
 import java.io.IOException;
 
 public class PrioritizedHttpHandler extends BaseHttpHandler implements HttpHandler {
-    Gson gson = HttpTaskServer.getGson();
+    private final Gson gson = getGson();
 
     public PrioritizedHttpHandler(TaskManager taskManager) {
         super(taskManager);
@@ -24,10 +23,10 @@ public class PrioritizedHttpHandler extends BaseHttpHandler implements HttpHandl
                 sendText(exchange, gson.toJson(prioritizedTasks));
                 break;
             case "POST", "DELETE":
-                sendBadRequest(exchange, "Метод не поддерживается");
+                sendMethodNotAllowed(exchange);
                 break;
             default:
-                sendBadRequest(exchange, "Поддерживаемые методы: GET");
+                sendBadRequest(exchange, "Проверьте корректность запроса");
         }
     }
 }

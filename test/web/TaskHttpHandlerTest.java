@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Task;
 import tasks.TaskStatus;
+import web.handlers.BaseHttpHandler;
 
 import java.io.IOException;
 import java.net.URI;
@@ -24,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class TaskHttpHandlerTest {
     TaskManager taskManager = new InMemoryTaskManager();
     HttpTaskServer appServer = new HttpTaskServer(taskManager);
-    Gson gson = HttpTaskServer.getGson();
+    Gson gson = BaseHttpHandler.getGson();
     HttpClient client = HttpClient.newHttpClient();
 
     @BeforeEach
@@ -69,8 +70,6 @@ public class TaskHttpHandlerTest {
 
         assertNotNull(tasksFromManager, "Задачи не возвращаются");
         assertEquals(1, tasksFromManager.size(), "Некорректное количество задач");
-
-        System.out.println(taskManager.getAllTasks());
     }
 
     @Test
@@ -100,7 +99,6 @@ public class TaskHttpHandlerTest {
 
         // тесты проходят локально, но по какой-то причине гитхаб экшенс никак не хочет их пропускать
         assertEquals(404, response2.statusCode());
-
     }
 
     @Test
@@ -134,7 +132,5 @@ public class TaskHttpHandlerTest {
         // тесты проходят локально, но по какой-то причине гитхаб экшенс никак не хочет их пропускать
 //        List<Task> history = taskManager.getHistory();
 //        assertEquals(1, history.size(), "Некорректное количество задач");
-
     }
-
 }

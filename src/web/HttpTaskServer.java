@@ -5,39 +5,20 @@
 
 package web;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpServer;
 import managers.TaskManager;
-//import tasks.Task;
-//import tasks.TaskStatus;
 import web.handlers.*;
-import web.jsonAdapters.DurationTypeAdapter;
-import web.jsonAdapters.LocalDateTimeTypeAdapter;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 public class HttpTaskServer {
     private static final int PORT = 8080;
     private static HttpServer appServer;
     private static TaskManager taskManager;
 
-    private static final Gson gson = new GsonBuilder()
-            .serializeNulls()
-            .setPrettyPrinting()
-            .registerTypeAdapter(Duration.class, new DurationTypeAdapter())
-            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
-            .create();
-
     public HttpTaskServer(TaskManager taskManager) {
         HttpTaskServer.taskManager = taskManager;
-    }
-
-    public static Gson getGson() {
-        return gson;
     }
 
     public static void start() throws IOException {
@@ -59,19 +40,7 @@ public class HttpTaskServer {
     }
 
     public static void main(String[] args) throws Exception {
-//        HttpTaskServer server = new HttpTaskServer(taskManager);
-//        start();
-//
-//        Task task_1 = new Task(100001, "task_1", "task_1 desc", TaskStatus.NEW);
-//        taskManager.createTask(task_1);
-//
-//        Task task_2 = new Task("task_2", "task_2 desc", TaskStatus.NEW, LocalDateTime.of(2025, 8, 7, 11, 24), Duration.ofMinutes(30));
-//        taskManager.createTask(task_2);
-//
-//        taskManager.getTaskById(task_1.getTaskId());
-//        taskManager.getTaskById(task_2.getTaskId());
 
-        //        server.stop();
     }
 }
 

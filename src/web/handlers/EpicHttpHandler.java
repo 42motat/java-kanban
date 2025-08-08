@@ -7,7 +7,6 @@ import exceptions.TaskNotFoundException;
 import managers.TaskManager;
 import tasks.Epic;
 import tasks.Subtask;
-import web.HttpTaskServer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,12 +14,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class EpicHttpHandler extends BaseHttpHandler implements HttpHandler {
+    private final Gson gson = getGson();
 
     public EpicHttpHandler(TaskManager taskManager) {
         super(taskManager);
     }
-
-    Gson gson = HttpTaskServer.getGson();
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -98,7 +96,7 @@ public class EpicHttpHandler extends BaseHttpHandler implements HttpHandler {
                     }
                     break;
                 default:
-                    sendText(exchange, "Неверный запрос");
+                    sendBadRequest(exchange, "Проверьте корректность запроса");
             }
 
         } catch (

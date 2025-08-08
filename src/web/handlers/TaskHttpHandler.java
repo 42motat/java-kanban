@@ -7,7 +7,6 @@ import exceptions.TaskNotFoundException;
 import exceptions.TimeConflicted;
 import managers.TaskManager;
 import tasks.Task;
-import web.HttpTaskServer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,12 +14,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class TaskHttpHandler extends BaseHttpHandler implements HttpHandler {
+    private final Gson gson = getGson();
 
     public TaskHttpHandler(TaskManager taskManager) {
         super(taskManager);
     }
-
-    Gson gson = HttpTaskServer.getGson();
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -85,8 +83,9 @@ public class TaskHttpHandler extends BaseHttpHandler implements HttpHandler {
                     sendText(exchange, "Задача с ID " + taskId + " удалена");
                 }
                 break;
+
             default:
-                sendText(exchange, "Неверный запрос");
+                sendBadRequest(exchange, "Проверьте корректность запроса");
             }
         } catch (TaskNotFoundException e) {
             sendNotFound(exchange, "Задача не найдена");

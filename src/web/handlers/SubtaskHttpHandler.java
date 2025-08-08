@@ -13,16 +13,13 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpHandler;
 import managers.TaskManager;
-import web.HttpTaskServer;
-
 
 public class SubtaskHttpHandler extends BaseHttpHandler implements HttpHandler {
+    private final Gson gson = getGson();
 
     public SubtaskHttpHandler(TaskManager taskManager) {
         super(taskManager);
     }
-
-    Gson gson = HttpTaskServer.getGson();
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -89,6 +86,8 @@ public class SubtaskHttpHandler extends BaseHttpHandler implements HttpHandler {
                         sendText(exchange, "Подзадача с ID " + subtaskId + " удалена");
                     }
                     break;
+                default:
+                    sendBadRequest(exchange, "Проверьте корректность запроса");
             }
         } catch (TaskNotFoundException e) {
             sendNotFound(exchange, "Подзадача не найдена");
