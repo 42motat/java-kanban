@@ -1,9 +1,4 @@
 
-/* Александру Ф.
- * Добрый день, Александр!
- * Заранее благодарю за код-ревью.
- */
-
 package managers;
 
 import exceptions.ManagerSaveException;
@@ -43,6 +38,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     // для работы с приоритетным списком задач
+    @Override
     public List<Task> getPrioritizedTasks() {
         return List.copyOf(prioritizedTasks);
     }

@@ -41,7 +41,7 @@ public class Subtask extends Task {
                     ", subtaskTitle='" + getTaskTitle() + '\'' +
                     ", subtaskDesc='" + getTaskDesc() + '\'' +
                     ", subtaskStatus=" + getTaskStatus() +
-                    ", startTime=" + startTime.format(formatter) +
+                    ", startTime=" + startTime/*.format(formatter)*/ +
                     ", duration=" + duration.toMinutes() +
                     " min}";
         } else {
